@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>奶蓋茶食譜｜單頁版</title>
+  <style>
+    :root{ --bg:#fafafa; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --accent:#a855f7; --ring:#e5e7eb; }
+    *{ box-sizing:border-box }
+    body{ margin:0; font-family:system-ui, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans TC", sans-serif; line-height:1.6; color:var(--ink); background:var(--bg) }
+    header{ position:sticky; top:0; z-index:10; background:rgba(250,250,250,.9); backdrop-filter:saturate(180%) blur(6px); border-bottom:1px solid var(--ring) }
+    .wrap{ max-width:1100px; margin:0 auto; padding:18px 20px }
+    h1{ margin:0; font-size:clamp(22px,3.4vw,32px) }
+    .subtitle{ color:var(--muted); font-size:14px }
+    .toolbar{ display:flex; gap:10px; align-items:center; margin-top:12px; flex-wrap:wrap }
+    input[type="search"]{ flex:1; min-width:220px; padding:10px 12px; border:1px solid var(--ring); border-radius:10px }
+    button{ padding:10px 14px; border:1px solid var(--ring); background:var(--card); border-radius:10px; cursor:pointer }
+
+    .layout{ display:grid; grid-template-columns:280px 1fr; gap:18px; max-width:1100px; margin:14px auto; padding:0 20px }
+    @media (max-width:880px){ .layout{ grid-template-columns:1fr } }
+
+    nav{ position:sticky; top:84px; align-self:start; background:var(--card); border:1px solid var(--ring); border-radius:14px; padding:12px }
+    .toc{ list-style:none; margin:0; padding:0 }
+    .toc li{ margin:.5rem 0 }
+    .toc a{ text-decoration:none; color:var(--ink); padding:6px 8px; border-radius:6px; display:block }
+    .toc a:hover{ background:#f3f4f6 }
+
+    main{ display:grid; gap:14px }
+    article{ background:var(--card); border:1px solid var(--ring); border-radius:16px; padding:16px }
+    article h2{ margin:0 0 8px }
+    .meta{ color:var(--muted); font-size:14px; margin-bottom:8px }
+    .grid{ display:grid; grid-template-columns:1.2fr 1fr; gap:16px }
+    @media(max-width:720px){ .grid{ grid-template-columns:1fr } }
+    .section-title{ font-weight:700; margin:.5rem 0 }
+    .ingredients{ border:1px dashed var(--ring); border-radius:12px; padding:10px 12px; background:#fbfbfb }
+    .steps{ white-space:pre-line }
+    .media .ph{ display:grid; place-items:center; border:1px dashed var(--ring); border-radius:12px; padding:16px; color:var(--muted); min-height:120px }
+    .hidden{ display:none }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>奶蓋茶食譜</h1>
+      <div class="subtitle">根據文件內容整理｜含目錄、搜尋</div>
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="搜尋奶蓋品名或食材…" />
+        <button id="printBtn">列印</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav>
+      <ul id="toc" class="toc"></ul>
+    </nav>
+    <main id="recipes"></main>
+  </div>
+
+  <script>
+  const DATA = [
+    {id:"milkcap-black", name:"紅茶奶蓋", ingredients:["302紅茶 200cc","特糖 15cc","果糖 25cc","冰塊 8分滿","奶蓋 50cc"], steps:"302紅茶200cc+特糖15cc+果糖25cc+冰塊8分滿雪克+奶蓋50cc。", image:"", video:""},
+    {id:"milkcap-green", name:"綠茶奶蓋", ingredients:["茉綠香片 200cc","特糖 15cc","果糖 25cc","冰塊 8分滿","奶蓋 50cc"], steps:"茉綠香片200cc+特糖15cc+果糖25cc+冰塊8分滿雪克+奶蓋50cc。", image:"", video:""},
+    {id:"milkcap-qing", name:"青茶奶蓋", ingredients:["四季春 200cc","特糖 15cc","果糖 25cc","冰塊 8分滿","奶蓋 50cc"], steps:"四季春200cc+特糖15cc+果糖25cc+冰塊8分滿雪克+奶蓋50cc。", image:"", video:""},
+    {id:"milkcap-oolong", name:"烏龍奶蓋", ingredients:["烏龍茶 200cc","特糖 15cc","果糖 25cc","冰塊 8分滿","奶蓋 50cc"], steps:"烏龍茶200cc+特糖15cc+果糖25cc+冰塊8分滿雪克+奶蓋50cc。", image:"", video:""},
+    {id:"milkcap-matcha", name:"抹茶奶蓋", ingredients:["熱水 200cc","抹茶原粉 10g","特糖 15cc","果糖 25cc","冰塊 8分滿","奶蓋 50cc"], steps:"熱水200cc+抹茶原粉10g+特糖15cc+果糖25cc+冰塊8分滿雪克+奶蓋50cc。", image:"", video:""},
+    {id:"milkcap-choco", name:"巧克力奶蓋", ingredients:["熱水 100cc","純巧克力粉 10g","果糖 40cc","冰塊 8分滿","奶蓋 50cc"], steps:"熱水100cc+純巧克力粉10g+果糖40cc+冰塊8分滿雪克+奶蓋50cc。", image:"", video:""},
+    {id:"milkcap-coffee", name:"咖啡奶蓋", ingredients:["濃縮咖啡液 100cc","冷開水 100cc","特糖 20cc","冰塊 8分滿","奶蓋 50cc"], steps:"濃縮咖啡液100cc+冷開水100cc+特糖20cc+冰塊8分滿雪克+奶蓋50cc。", image:"", video:""}
+  ];
+
+  const toc=document.getElementById('toc');
+  const container=document.getElementById('recipes');
+
+  function createRecipeCard(r){
+    const art=document.createElement('article');
+    art.id=r.id; art.dataset.name=r.name; art.dataset.ingredients=r.ingredients.join(' ');
+    art.innerHTML=`<h2>${r.name}</h2>
+      <div class="meta">類別：奶蓋系列｜份量：1杯</div>
+      <div class="grid">
+        <div>
+          <div class="section-title">步驟</div>
+          <div class="steps">${r.steps}</div>
+          <div class="section-title">材料</div>
+          <ul class="ingredients">${r.ingredients.map(x=>`<li>${x}</li>`).join('')}</ul>
+        </div>
+        <div class="media">
+          ${r.image?`<img src="${r.image}" alt="${r.name}" style="width:100%;border-radius:12px">`:`<div class='ph'>成品照（image 連結）</div>`}
+          ${r.video?`<video src="${r.video}" controls style="width:100%;border-radius:12px"></video>`:`<div class='ph'>教學影片（video 連結）</div>`}
+        </div>
+      </div>`;
+    return art;
+  }
+
+  function render(){
+    toc.innerHTML=''; container.innerHTML='';
+    DATA.forEach(r=>{
+      const li=document.createElement('li');
+      li.innerHTML=`<a href="#${r.id}">${r.name}</a>`; toc.appendChild(li);
+      container.appendChild(createRecipeCard(r));
+    });
+  }
+  render();
+
+  document.getElementById('q').addEventListener('input',e=>{
+    const kw=e.target.value.trim().toLowerCase();
+    [...container.querySelectorAll('article')].forEach(c=>{
+      const hay=(c.dataset.name+" "+c.dataset.ingredients).toLowerCase();
+      c.classList.toggle('hidden', kw && !hay.includes(kw));
+    });
+  });
+
+  document.getElementById('printBtn').addEventListener('click',()=>window.print());
+  </script>
+</body>
+</html>

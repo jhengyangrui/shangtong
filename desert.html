@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>創業甜品食譜｜單頁版</title>
+  <style>
+    :root{ --bg:#fafafa; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --accent:#ec4899; --ring:#e5e7eb; }
+    *{ box-sizing:border-box }
+    body{ margin:0; font-family:system-ui, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans TC", sans-serif; line-height:1.6; color:var(--ink); background:var(--bg) }
+    header{ position:sticky; top:0; z-index:10; background:rgba(250,250,250,.9); backdrop-filter:saturate(180%) blur(6px); border-bottom:1px solid var(--ring) }
+    .wrap{ max-width:1100px; margin:0 auto; padding:18px 20px }
+    h1{ margin:0; font-size:clamp(22px,3.4vw,32px) }
+    .subtitle{ color:var(--muted); font-size:14px }
+    .toolbar{ display:flex; gap:10px; align-items:center; margin-top:12px; flex-wrap:wrap }
+    input[type="search"]{ flex:1; min-width:220px; padding:10px 12px; border:1px solid var(--ring); border-radius:10px }
+    button{ padding:10px 14px; border:1px solid var(--ring); background:var(--card); border-radius:10px; cursor:pointer }
+
+    .layout{ display:grid; grid-template-columns:280px 1fr; gap:18px; max-width:1100px; margin:14px auto; padding:0 20px }
+    @media (max-width:880px){ .layout{ grid-template-columns:1fr } }
+
+    nav{ position:sticky; top:84px; align-self:start; background:var(--card); border:1px solid var(--ring); border-radius:14px; padding:12px }
+    .toc{ list-style:none; margin:0; padding:0 }
+    .toc li{ margin:.5rem 0 }
+    .toc a{ text-decoration:none; color:var(--ink); padding:6px 8px; border-radius:6px; display:block }
+    .toc a:hover{ background:#f3f4f6 }
+
+    main{ display:grid; gap:14px }
+    article{ background:var(--card); border:1px solid var(--ring); border-radius:16px; padding:16px }
+    article h2{ margin:0 0 8px }
+    .meta{ color:var(--muted); font-size:14px; margin-bottom:8px }
+    .grid{ display:grid; grid-template-columns:1.2fr 1fr; gap:16px }
+    @media(max-width:720px){ .grid{ grid-template-columns:1fr } }
+    .section-title{ font-weight:700; margin:.5rem 0 }
+    .ingredients{ border:1px dashed var(--ring); border-radius:12px; padding:10px 12px; background:#fbfbfb }
+    .steps{ white-space:pre-line }
+    .media .ph{ display:grid; place-items:center; border:1px dashed var(--ring); border-radius:12px; padding:16px; color:var(--muted); min-height:120px }
+    .hidden{ display:none }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>創業甜品食譜</h1>
+      <div class="subtitle">根據文件內容整理｜含目錄、搜尋</div>
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="搜尋名稱或食材…" />
+        <button id="printBtn">列印</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav>
+      <ul id="toc" class="toc"></ul>
+    </nav>
+    <main id="recipes"></main>
+  </div>
+
+  <script>
+  const DATA = [
+    {id:"sweet-potato-ball", name:"手工地瓜圓", ingredients:["熟地瓜 300g (泥230g 絲70g)","糊化漿 43g (糊化粉1:7水)","地瓜圓預拌粉 153g"], steps:"1. 地瓜切塊蒸30分鐘，地瓜絲蒸10分鐘。\n2. 糊化漿製作：糊化粉水加熱至透明冷卻。\n3. 地瓜泥+糊化漿+粉混合成糰，加入絲調整。\n4. 搓條切塊成生圓。\n5. 水煮滾，放入地瓜圓煮浮起後轉小火3分鐘，撈出冷卻拌果糖防沾黏。", image:"", video:""},
+    {id:"taro-ball", name:"手工芋圓", ingredients:["熟芋頭 300g (泥230g 絲70g)","糊化漿 86g (糊化粉1:7水)","芋圓預拌粉 120g"], steps:"1. 芋頭蒸30分鐘燜30分鐘，壓泥。絲蒸15分鐘。\n2. 糊化漿製作。\n3. 芋頭泥+糊化漿+粉混合，加入絲揉成糰。\n4. 搓條切塊成生芋圓。\n5. 水煮滾，煮至浮起再小火3分鐘，撈出冷卻拌果糖。", image:"", video:""},
+    {id:"gold-inside", name:"手工金包銀", ingredients:["熟芋頭 100g","二砂糖 10g","手工地瓜圓 250g"], steps:"1. 餡料：芋泥+糖混勻冷凍備用。\n2. 皮8g，餡2g，合10g。\n3. 水煮滾，放入金包銀，浮起後小火3分鐘，撈出冷卻拌果糖。", image:"", video:""},
+    {id:"original-jelly", name:"原味粉粿", ingredients:["原味粉粿粉 185g","沙拉油 4g","熱水 250cc","冷水 250cc"], steps:"1. 粉+冷水過濾三次，分次加熱水攪拌成糊，拌油。\n2. 倒入盤中蒸30分鐘至透明Q狀。\n3. 放涼冷藏，隔日切塊更佳，切刀需沾水。", image:"", video:""},
+    {id:"brown-sugar-jelly", name:"黑糖Q粿", ingredients:["黑糖Q粿粉 250g","沙拉油 4g","熱水 250cc","冷水 250cc"], steps:"1. 粉+冷水過濾三次，分次加熱水攪拌成糊，拌油。\n2. 倒入盤中蒸30分鐘至透明Q狀。\n3. 放涼冷藏，隔日切塊更佳。切刀需沾水。", image:"", video:""},
+    {id:"grass-jelly", name:"嫩仙草凍", ingredients:["仙草汁 150g","熱水 500-600cc","二砂糖 60g","冷水 30cc","芡粉 8g"], steps:"1. 水+仙草汁煮滾。\n2. 粉水加入攪拌，煮沸加糖。\n3. 過濾後放冷卻，冷藏凝固。", image:"", video:""},
+    {id:"fruit-jelly", name:"果汁果凍", ingredients:["果凍粉 50g","熱水 440cc","果汁 60cc"], steps:"1. 水煮滾，加入果凍粉攪拌溶解。\n2. 倒入果汁攪勻，冷卻後冷藏。", image:"", video:""},
+    {id:"pudding", name:"雞蛋布丁", ingredients:["布丁粉 50g","熱水 500cc 或 (熱水250cc+牛奶200cc+鮮奶油50cc)"], steps:"1. 水煮滾，加入布丁粉攪拌溶解。\n2. 過濾倒入模型，冷卻後冷藏。", image:"", video:""}
+  ];
+
+  const toc=document.getElementById('toc');
+  const container=document.getElementById('recipes');
+
+  function createRecipeCard(r){
+    const art=document.createElement('article');
+    art.id=r.id; art.dataset.name=r.name; art.dataset.ingredients=r.ingredients.join(' ');
+    art.innerHTML=`<h2>${r.name}</h2>
+      <div class="meta">類別：創業甜品｜份量：1份</div>
+      <div class="grid">
+        <div>
+          <div class="section-title">步驟</div>
+          <div class="steps">${r.steps}</div>
+          <div class="section-title">材料</div>
+          <ul class="ingredients">${r.ingredients.map(x=>`<li>${x}</li>`).join('')}</ul>
+        </div>
+        <div class="media">
+          ${r.image?`<img src="${r.image}" alt="${r.name}" style="width:100%;border-radius:12px">`:`<div class='ph'>成品照（image 連結）</div>`}
+          ${r.video?`<video src="${r.video}" controls style="width:100%;border-radius:12px"></video>`:`<div class='ph'>教學影片（video 連結）</div>`}
+        </div>
+      </div>`;
+    return art;
+  }
+
+  function render(){
+    toc.innerHTML=''; container.innerHTML='';
+    DATA.forEach(r=>{
+      const li=document.createElement('li');
+      li.innerHTML=`<a href="#${r.id}">${r.name}</a>`; toc.appendChild(li);
+      container.appendChild(createRecipeCard(r));
+    });
+  }
+  render();
+
+  document.getElementById('q').addEventListener('input',e=>{
+    const kw=e.target.value.trim().toLowerCase();
+    [...container.querySelectorAll('article')].forEach(c=>{
+      const hay=(c.dataset.name+" "+c.dataset.ingredients).toLowerCase();
+      c.classList.toggle('hidden', kw && !hay.includes(kw));
+    });
+  });
+
+  document.getElementById('printBtn').addEventListener('click',()=>window.print());
+  </script>
+</body>
+</html>

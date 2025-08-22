@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>異國風輕食食譜｜單頁版</title>
+  <style>
+    :root{ --bg:#fafafa; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --accent:#f97316; --ring:#e5e7eb; }
+    *{ box-sizing:border-box }
+    body{ margin:0; font-family:system-ui, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans TC", sans-serif; line-height:1.6; color:var(--ink); background:var(--bg) }
+    header{ position:sticky; top:0; z-index:10; background:rgba(250,250,250,.9); backdrop-filter:saturate(180%) blur(6px); border-bottom:1px solid var(--ring) }
+    .wrap{ max-width:1100px; margin:0 auto; padding:18px 20px }
+    h1{ margin:0; font-size:clamp(22px,3.4vw,32px) }
+    .subtitle{ color:var(--muted); font-size:14px }
+    .toolbar{ display:flex; gap:10px; align-items:center; margin-top:12px; flex-wrap:wrap }
+    input[type="search"]{ flex:1; min-width:220px; padding:10px 12px; border:1px solid var(--ring); border-radius:10px }
+    button{ padding:10px 14px; border:1px solid var(--ring); background:var(--card); border-radius:10px; cursor:pointer }
+
+    .layout{ display:grid; grid-template-columns:280px 1fr; gap:18px; max-width:1100px; margin:14px auto; padding:0 20px }
+    @media (max-width:880px){ .layout{ grid-template-columns:1fr } }
+
+    nav{ position:sticky; top:84px; align-self:start; background:var(--card); border:1px solid var(--ring); border-radius:14px; padding:12px }
+    .toc{ list-style:none; margin:0; padding:0 }
+    .toc li{ margin:.5rem 0 }
+    .toc a{ text-decoration:none; color:var(--ink); padding:6px 8px; border-radius:6px; display:block }
+    .toc a:hover{ background:#f3f4f6 }
+
+    main{ display:grid; gap:14px }
+    article{ background:var(--card); border:1px solid var(--ring); border-radius:16px; padding:16px }
+    article h2{ margin:0 0 8px }
+    .meta{ color:var(--muted); font-size:14px; margin-bottom:8px }
+    .grid{ display:grid; grid-template-columns:1.2fr 1fr; gap:16px }
+    @media(max-width:720px){ .grid{ grid-template-columns:1fr } }
+    .section-title{ font-weight:700; margin:.5rem 0 }
+    .ingredients{ border:1px dashed var(--ring); border-radius:12px; padding:10px 12px; background:#fbfbfb }
+    .steps{ white-space:pre-line }
+    .media .ph{ display:grid; place-items:center; border:1px dashed var(--ring); border-radius:12px; padding:16px; color:var(--muted); min-height:120px }
+    .hidden{ display:none }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>異國風輕食食譜</h1>
+      <div class="subtitle">根據文件內容整理｜含目錄、搜尋</div>
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="搜尋名稱或食材…" />
+        <button id="printBtn">列印</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav>
+      <ul id="toc" class="toc"></ul>
+    </nav>
+    <main id="recipes"></main>
+  </div>
+
+  <script>
+  const DATA = [
+    {id:"scallion-pancake", name:"青蔥鬆餅", ingredients:["全蛋液 58g/粒","水 90g","特調鬆餅粉 150g","粗黑胡椒粒 1.4g","青蔥末 5g","無鹽奶油(液) 10g"], steps:"1. 全蛋液打發，加入水混勻。\n2. 加入過篩鬆餅粉與黑胡椒攪拌，拌入蔥末。\n3. 加入溶化奶油，麵糊靜置5-10分鐘。\n4. 鬆餅機預熱並抹油，倒入麵糊，蓋上蓋子翻面，約7-8分鐘即可。", image:"", video:""},
+    {id:"pizza-pancake", name:"披薩鬆餅", ingredients:["全蛋液 58g/粒","水 90g","特調鬆餅粉 150g","無鹽奶油(液) 10g","(鹹)原味鬆餅1片","泰式甜雞醬","披薩絲","義大利香料","玉米粒"], steps:"1. 與青蔥鬆餅相同製作麵糊，烤約6分30秒成原味鬆餅片。\n2. 鬆餅片加上醬料、披薩絲、香料與玉米粒。\n3. 用小烤箱加熱1分30秒~2分鐘。", image:"", video:""},
+    {id:"plain-pancake", name:"原味鬆餅", ingredients:["全蛋液 46g/粒","鮮奶 135g","鬆餅粉 150g","無鹽奶油(液) 15g"], steps:"1. 全蛋液打發，加入鮮奶混勻。\n2. 加入過篩鬆餅粉攪拌均勻。\n3. 拌入溶化奶油，麵糊靜置5-10分鐘。\n4. 鬆餅機預熱抹油，倒入麵糊，烤約7-8分鐘取出切割。", image:"", video:""},
+    {id:"choco-pancake", name:"巧克力鬆餅", ingredients:["全蛋液 51g/粒","鮮奶 135g","鬆餅粉 150g","純巧克力粉 25g","無鹽奶油(液) 15g"], steps:"1. 全蛋液打發，加入鮮奶混勻。\n2. 加入過篩鬆餅粉與巧克力粉攪拌均勻。\n3. 拌入溶化奶油，靜置5-10分鐘。\n4. 鬆餅機預熱抹油，倒入麵糊，烤約7-8分鐘。", image:"", video:""},
+    {id:"juice-salad", name:"果汁沙拉", ingredients:["原味沙拉 100g","草莓汁 20g"], steps:"原味沙拉100g + 草莓汁20g 攪拌均勻即可。", image:"", video:""},
+    {id:"redbean-filling", name:"紅豆餡", ingredients:["熟紅豆粒 600g/罐","二砂糖 6g","元宵粉 15g","水 50cc"], steps:"1. 元宵粉加冷水調勻過濾備用。\n2. 紅豆粒加熱煮沸，慢慢加入粉水攪拌。\n3. 加入二砂糖煮沸，熄火冷卻即成餡料。", image:"", video:""},
+    {id:"gofre", name:"(台灣)格子Q", ingredients:["格子Q粉 333g","全蛋液 50g/粒","水或鮮奶 230g","沙拉油 115g","珍珠糖 35g (可選)","白砂糖 100g","糊化粉 15g"], steps:"1. 粉過篩後加入水、蛋、油混勻成麵糰。\n2. 可加入珍珠糖拌勻，烤約4分鐘。\n3. 砂糖+糊化粉混合為沾糖，沾麵糰上下烤約4分鐘。\n4. 原味麵糰可調甜/鹹，約4分鐘。\n5. 鬆餅機預熱後，放入麵糰130-140g烤4分鐘。", image:"", video:""},
+    {id:"eggette", name:"新式雞蛋仔", ingredients:["格子Q粉 166g","鬆餅粉 166g","全蛋液 50g/粒","水或鮮奶 280g","沙拉油 66g","無鹽奶油 66g","珍珠糖 35g (可選)"], steps:"1. 粉類過篩後加水、蛋、油、奶油混勻成麵糊。\n2. 可加入珍珠糖攪勻。\n3. 雞蛋仔機預熱後，倒入200-210g麵糊，200℃烤約8分鐘。", image:"", video:""}
+  ];
+
+  const toc=document.getElementById('toc');
+  const container=document.getElementById('recipes');
+
+  function createRecipeCard(r){
+    const art=document.createElement('article');
+    art.id=r.id; art.dataset.name=r.name; art.dataset.ingredients=r.ingredients.join(' ');
+    art.innerHTML=`<h2>${r.name}</h2>
+      <div class="meta">類別：異國風輕食｜份量：1份</div>
+      <div class="grid">
+        <div>
+          <div class="section-title">步驟</div>
+          <div class="steps">${r.steps}</div>
+          <div class="section-title">材料</div>
+          <ul class="ingredients">${r.ingredients.map(x=>`<li>${x}</li>`).join('')}</ul>
+        </div>
+        <div class="media">
+          ${r.image?`<img src="${r.image}" alt="${r.name}" style="width:100%;border-radius:12px">`:`<div class='ph'>成品照（image 連結）</div>`}
+          ${r.video?`<video src="${r.video}" controls style="width:100%;border-radius:12px"></video>`:`<div class='ph'>教學影片（video 連結）</div>`}
+        </div>
+      </div>`;
+    return art;
+  }
+
+  function render(){
+    toc.innerHTML=''; container.innerHTML='';
+    DATA.forEach(r=>{
+      const li=document.createElement('li');
+      li.innerHTML=`<a href="#${r.id}">${r.name}</a>`; toc.appendChild(li);
+      container.appendChild(createRecipeCard(r));
+    });
+  }
+  render();
+
+  document.getElementById('q').addEventListener('input',e=>{
+    const kw=e.target.value.trim().toLowerCase();
+    [...container.querySelectorAll('article')].forEach(c=>{
+      const hay=(c.dataset.name+" "+c.dataset.ingredients).toLowerCase();
+      c.classList.toggle('hidden', kw && !hay.includes(kw));
+    });
+  });
+
+  document.getElementById('printBtn').addEventListener('click',()=>window.print());
+  </script>
+</body>
+</html>

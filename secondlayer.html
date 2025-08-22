@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>功能選單</title>
+  <style>
+    body {
+      margin:0;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      font-family: system-ui, "Noto Sans TC", sans-serif;
+      background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Fancy animated background blobs */
+    .bg-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.55;
+      z-index: 0;
+      animation: blobMove 18s infinite alternate ease-in-out;
+    }
+    .bg-blob1 {
+      width: 420px; height: 420px;
+      background: linear-gradient(135deg, #a5b4fc 0%, #38bdf8 100%);
+      top: -120px; left: -120px;
+      animation-delay: 0s;
+    }
+    .bg-blob2 {
+      width: 340px; height: 340px;
+      background: linear-gradient(135deg, #f472b6 0%, #facc15 100%);
+      bottom: -100px; right: -80px;
+      animation-delay: 4s;
+    }
+    .bg-blob3 {
+      width: 260px; height: 260px;
+      background: linear-gradient(135deg, #34d399 0%, #818cf8 100%);
+      top: 60%; left: 10%;
+      animation-delay: 8s;
+    }
+    @keyframes blobMove {
+      0%   { transform: scale(1) translateY(0) translateX(0); }
+      50%  { transform: scale(1.15) translateY(40px) translateX(30px); }
+      100% { transform: scale(0.95) translateY(-30px) translateX(-20px); }
+    }
+    .glass {
+      background: rgba(255,255,255,0.25);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 24px;
+      border: 1.5px solid rgba(255,255,255,0.18);
+      padding: 48px 36px 36px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 340px;
+      z-index: 1;
+    }
+    h1 {
+      margin-bottom:30px;
+      color:#1f2937;
+      letter-spacing: 2px;
+      font-weight: 700;
+      text-shadow: 0 2px 8px rgba(16,185,129,0.08);
+    }
+    .btn {
+      display:inline-block;
+      margin:14px 0;
+      padding:16px 0;
+      width:240px;
+      font-size:20px;
+      font-weight: 600;
+      text-align:center;
+      color:#fff;
+      background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
+      border:none;
+      border-radius:16px;
+      cursor:pointer;
+      text-decoration:none;
+      box-shadow: 0 4px 16px 0 rgba(16,185,129,0.12);
+      transition: 
+        background 0.3s,
+        transform 0.18s cubic-bezier(.4,2,.6,1),
+        box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      left: -75%;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      background: rgba(255,255,255,0.18);
+      transform: skewX(-20deg);
+      transition: left 0.4s cubic-bezier(.4,2,.6,1);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #059669 0%, #0ea5e9 100%);
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 8px 32px 0 rgba(16,185,129,0.18);
+    }
+    .btn:hover::before {
+      left: 120%;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    @media (max-width: 480px) {
+      .glass {
+        min-width: unset;
+        width: 95vw;
+        padding: 32px 8vw 24px 8vw;
+      }
+      .btn {
+        width: 100%;
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-blob bg-blob1"></div>
+  <div class="bg-blob bg-blob2"></div>
+  <div class="bg-blob bg-blob3"></div>
+  <div class="glass">
+    <h1>功能選單</h1>
+    <a class="btn" href="thirdlayer.html" >SOP智能服務系統</a>
+    <a class="btn" href="web.html" >網頁</a>
+    <a class="btn" href="erp.html" >ERP</a>
+    <a class="btn" href="warroom.html" >戰情室</a>
+    <button class="btn" type="button" onclick="history.back()" style="margin-top:18px;background:linear-gradient(90deg,#818cf8 0%,#f472b6 100%);">
+      ← 回到上一頁
+    </button>
+  </div>
+</body>
+</html>

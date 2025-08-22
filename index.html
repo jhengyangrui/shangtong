@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>登入頁面</title>
+  <style>
+    body {
+      margin:0;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#f3f4f6;
+      font-family: system-ui, "Noto Sans TC", sans-serif;
+    }
+    .login-box {
+      background:#fff;
+      padding:30px;
+      border-radius:12px;
+      box-shadow:0 6px 16px rgba(0,0,0,.15);
+      width:300px;
+    }
+    h2 {text-align:center; margin-bottom:20px; color:#1f2937;}
+    input {
+      width:100%;
+      padding:10px;
+      margin:8px 0;
+      border:1px solid #d1d5db;
+      border-radius:8px;
+      font-size:16px;
+    }
+    button {
+      width:100%;
+      padding:12px;
+      background:#3b82f6;
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      font-size:16px;
+      cursor:pointer;
+      margin-top:12px;
+    }
+    button:hover {background:#2563eb;}
+    .error {color:#dc2626; font-size:14px; margin-top:10px; text-align:center;}
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>登入</h2>
+    <input type="text" id="username" placeholder="帳號">
+    <input type="password" id="password" placeholder="密碼">
+    <button onclick="login()">登入</button>
+    <div id="errorMsg" class="error"></div>
+  </div>
+
+  <script>
+    function login() {
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+
+      // 設定一組測試帳號密碼
+      const correctUser = "admin";
+      const correctPass = "1234";
+
+      if (user === correctUser && pass === correctPass) {
+        window.location.href = "secondlayer.html";  // 登入成功，跳轉
+      } else {
+        errorMsg.textContent = "帳號或密碼錯誤，請再試一次。";
+      }
+    }
+  </script>
+</body>
+</html>
