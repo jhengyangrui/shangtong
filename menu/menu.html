@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>飲品選單｜點圖開分頁</title>
+  <style>
+    :root{
+      --bg:#ffffff;  /* 改白底比較清楚 */
+      --ink:#000000; /* 黑色字體 */
+      --muted:#555555; 
+      --card:#f9f9f9; 
+      --ring:#cccccc; 
+      --accent:#38bdf8;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,"Noto Sans TC",sans-serif;background:var(--bg);color:var(--ink)}
+    header{position:sticky;top:0;background:#f1f1f1;border-bottom:1px solid var(--ring);z-index:10}
+    .wrap{max-width:1200px;margin:auto;padding:24px}
+    h1{margin:0;font-size:clamp(22px,4vw,36px);letter-spacing:.04em}
+    p.lead{margin:.5rem 0 0;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:18px}
+    .card{display:block;position:relative;border-radius:18px;overflow:hidden;background:var(--card);border:1px solid var(--ring);text-decoration:none;box-shadow:0 6px 12px rgba(0,0,0,.1);}
+    .card img{width:100%;height:280px;object-fit:cover;display:block;transition:transform .35s ease}
+    .card .label{position:absolute;left:12px;bottom:12px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.85);border:1px solid var(--ring);font-weight:600;color:#000}
+    .card:hover img{transform:scale(1.04)}
+    .card:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+    footer{text-align:center;color:var(--muted);padding:28px 0}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>飲品選單</h1>
+      <p class="lead">點選圖片即可跳轉到各自分頁</p>
+    </div>
+  </header>
+  <main class="wrap">
+    <div class="grid">
+      <a class="card" href="pineappletea.html">
+        <img src="486799_0.jpg" alt="鳳梨青｜Iced Pineapple Tea">
+        <div class="label">鳳梨青｜Iced Pineapple Tea</div>
+      </a>
+      <a class="card" href="orangeicedtea.html">
+        <img src="486801_0.jpg" alt="柳橙冰茶｜Orange Iced Tea">
+        <div class="label">柳橙冰茶｜Orange Iced Tea</div>
+      </a>
+      <a class="card" href="lemonjadegreen.html">
+        <img src="486802_0.jpg" alt="翡翠檸檬綠茶｜Lemon Jade Green Tea">
+        <div class="label">翡翠檸檬綠茶｜Lemon Jade Green Tea</div>
+      </a>
+      <a class="card" href="pages/signature-lemonade.html">
+        <img src="486803_0.jpg" alt="特調檸檬汁｜Signature Lemonade">
+        <div class="label">特調檸檬汁｜Signature Lemonade</div>
+      </a>
+      <a class="card" href="pages/apple-cider-iced-tea.html">
+        <img src="486804_0.jpg" alt="英式微釀蘋果冰茶｜British Apple Cider Iced Tea">
+        <div class="label">英式微釀蘋果冰茶｜British Apple Cider Iced Tea</div>
+      </a>
+      <a class="card" href="pages/hawaiian-fruit-tea.html">
+        <img src="486796_0.jpg" alt="夏威夷水果茶｜Hawaiian Fruit Tea">
+        <div class="label">夏威夷水果茶｜Hawaiian Fruit Tea</div>
+      </a>
+    </div>
+  </main>
+  <footer>© 2025 ShangTong Drinks</footer>
+</body>
+</html>

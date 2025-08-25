@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>飲品測試面板</title>
+  <!-- 可選：Chart.js 用於分數走勢圖；離線時忽略即可 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#121a2b; --ink:#e8f0fe; --muted:#93a4c4; --accent:#7dd3fc;
+      --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --ring:#243045; --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:linear-gradient(180deg,#0b1220,#0e172a);
+      color:var(--ink); font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans TC",sans-serif;
+      line-height:1.5;
+    }
+    header{
+      position:sticky; top:0; z-index:5; backdrop-filter:saturate(170%) blur(8px);
+      background:rgba(11,18,32,.85); border-bottom:1px solid var(--ring);
+    }
+    .wrap{max-width:1200px; margin:0 auto; padding:16px}
+    h1{margin:12px 0 8px; font-size:24px}
+    .toolbar{
+      display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:8px 0 12px;
+    }
+    .btn{
+      appearance:none; border:1px solid var(--ring); background:linear-gradient(180deg,#1a2540,#141d33);
+      color:var(--ink); padding:10px 14px; border-radius:12px; cursor:pointer;
+      transition:transform .05s ease, box-shadow .2s ease, border-color .2s ease;
+      box-shadow:0 6px 16px rgba(0,0,0,.25);
+    }
+    .btn:hover{border-color:var(--accent)}
+    .btn:active{transform:translateY(1px)}
+    .btn.ghost{background:transparent}
+    .grid{
+      display:grid; gap:14px;
+      grid-template-columns: 1.2fr 1fr;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+    }
+    .card{
+      background:linear-gradient(180deg,#121a2b,#0f1728);
+      border:1px solid var(--ring); border-radius:var(--radius);
+      box-shadow:0 12px 28px rgba(0,0,0,.35); padding:16px;
+    }
+    .card h2{margin:0 0 12px; font-size:18px}
+    .row{display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center; margin:10px 0}
+    .row > label{color:var(--muted); font-size:14px}
+    input[type="text"], input[type="number"], input[type="datetime-local"], select, textarea{
+      width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--ring);
+      background:#0c1322; color:var(--ink); outline:none;
+    }
+    textarea{min-height:90px; resize:vertical}
+    input[type="range"]{width:100%}
+    .kv{display:flex; gap:10px; flex-wrap:wrap}
+    .kv .chip{
+      padding:8px 12px; border:1px solid var(--ring); border-radius:999px; cursor:pointer;
+      user-select:none; background:#0d1628;
+    }
+    .kv .chip.active{border-color:var(--accent); box-shadow:0 0 0 2px rgba(125,211,252,.25) inset}
+    .score{
+      font-size:40px; font-weight:700; letter-spacing:.5px; margin:4px 0 8px;
+    }
+    .score.ok{color:var(--ok)} .score.warn{color:var(--warn)} .score.bad{color:var(--bad)}
+    .pair{
+      display:grid; grid-template-columns: 1fr auto; gap:10px; align-items:center;
+    }
+    .pill{
+      padding:6px 10px; border-radius:999px; border:1px solid var(--ring); color:var(--muted);
+      font-size:12px;
+    }
+    .thumb{
+      width:100%; max-height:200px; object-fit:cover; border-radius:12px; border:1px solid var(--ring);
+    }
+    .table{
+      width:100%; border-collapse:separate; border-spacing:0; overflow:auto; border-radius:12px; border:1px solid var(--ring);
+    }
+    .table th, .table td{
+      text-align:left; padding:10px 12px; border-bottom:1px solid var(--ring); white-space:nowrap;
+    }
+    .table tr:last-child td{border-bottom:none}
+    .muted{color:var(--muted)}
+    .right{display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap}
+    .tiny{font-size:12px}
+    .meter{
+      height:10px; background:#0a1020; border:1px solid var(--ring); border-radius:999px; overflow:hidden;
+    }
+    .meter > span{
+      display:block; height:100%; background:linear-gradient(90deg,#22c55e,#eab308,#ef4444);
+      width:0%;
+    }
+    @media print{
+      header, .no-print{display:none !important}
+      body{background:#fff; color:#222}
+      .card{box-shadow:none; border:1px solid #ddd}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>飲品測試面板</h1>
+      <div class="toolbar">
+        <button class="btn" id="newIdBtn">產生編號</button>
+        <button class="btn" id="startTimerBtn">開始計時</button>
+        <button class="btn" id="pauseTimerBtn">暫停</button>
+        <button class="btn ghost" id="resetTimerBtn">歸零</button>
+        <span id="timerLabel" class="pill">00:00</span>
+        <div style="flex:1"></div>
+        <button class="btn" id="saveBtn">加入批次</button>
+        <button class="btn ghost" id="exportBtn">匯出 CSV</button>
+        <button class="btn ghost" id="clearBtn">清除全部</button>
+        <button class="btn" onclick="window.print()">列印</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap grid">
+    <!-- 左側：表單 -->
+    <section class="card">
+      <h2>基本資訊</h2>
+      <div class="row">
+        <label for="sampleId">樣品編號</label>
+        <input id="sampleId" type="text" placeholder="如：B250825-01" />
+      </div>
+      <div class="row">
+        <label for="tester">測試人員</label>
+        <input id="tester" type="text" placeholder="輸入姓名或代號" />
+      </div>
+      <div class="row">
+        <label for="dt">測試時間</label>
+        <input id="dt" type="datetime-local" />
+      </div>
+      <div class="row">
+        <label>品項（快速配置）</label>
+        <div class="kv" id="presetChips">
+          <span class="chip" data-preset="珍奶">珍奶</span>
+          <span class="chip" data-preset="鮮奶茶">鮮奶茶</span>
+          <span class="chip" data-preset="紅茶">紅茶</span>
+        </div>
+      </div>
+
+      <h2 style="margin-top:18px">風味 & 口感（0–10）</h2>
+      <div class="row">
+        <label>香氣（Aroma）<span class="muted tiny" id="aromaVal"></span></label>
+        <input id="aroma" type="range" min="0" max="10" step="1" value="5">
+      </div>
+      <div class="row">
+        <label>茶感（Tea Body）<span class="muted tiny" id="teaVal"></span></label>
+        <input id="tea" type="range" min="0" max="10" step="1" value="6">
+      </div>
+      <div class="row">
+        <label>甜度（Sweetness）<span class="muted tiny" id="sweetVal"></span></label>
+        <input id="sweet" type="range" min="0" max="10" step="1" value="5">
+      </div>
+      <div class="row">
+        <label>奶香（Milk Aroma）<span class="muted tiny" id="milkVal"></span></label>
+        <input id="milk" type="range" min="0" max="10" step="1" value="6">
+      </div>
+      <div class="row">
+        <label>滑順度（Mouthfeel）<span class="muted tiny" id="mouthVal"></span></label>
+        <input id="mouth" type="range" min="0" max="10" step="1" value="6">
+      </div>
+      <div class="row">
+        <label>餘韻（Aftertaste）<span class="muted tiny" id="afterVal"></span></label>
+        <input id="after" type="range" min="0" max="10" step="1" value="6">
+      </div>
+
+      <h2 style="margin-top:18px">理化/外觀</h2>
+      <div class="row">
+        <label>冰量（%）<span class="muted tiny" id="iceVal"></span></label>
+        <input id="ice" type="range" min="0" max="100" step="5" value="30">
+      </div>
+      <div class="row">
+        <label>溫度（°C）</label>
+        <input id="temp" type="number" min="0" max="100" step="0.1" placeholder="例如 4 或 25">
+      </div>
+      <div class="row">
+        <label>糖度 °Bx（可填）</label>
+        <input id="brix" type="number" min="0" max="30" step="0.1" placeholder="使用糖度計量測">
+      </div>
+      <div class="row">
+        <label>顏色</label>
+        <input id="color" type="color" value="#8b5cf6" />
+      </div>
+      <div class="row">
+        <label>照片（選拍）</label>
+        <input id="photo" type="file" accept="image/*" capture="environment">
+      </div>
+      <img id="thumb" class="thumb" alt="" style="display:none">
+
+      <h2 style="margin-top:18px">備註</h2>
+      <textarea id="notes" placeholder="口味描述、異味、粉末感、層次、建議配方修正…"></textarea>
+
+      <div class="right no-print" style="margin-top:12px">
+        <button class="btn ghost" id="resetFormBtn">清空表單</button>
+        <button class="btn" id="addBtn">加入批次</button>
+      </div>
+    </section>
+
+    <!-- 右側：即時計算 / 批次 / 圖表 -->
+    <section class="card">
+      <h2>即時結果</h2>
+      <div class="pair">
+        <div>
+          <div class="muted tiny">總分（滿分 100，含匹配度）</div>
+          <div id="score" class="score">--</div>
+          <div class="muted tiny">門檻（建議 80 分）</div>
+          <div class="meter"><span id="meterBar"></span></div>
+        </div>
+        <div class="pill" id="statusPill">狀態：--</div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <label>計分說明</label>
+        <div class="muted tiny">
+          權重：香氣15%、茶感25%、甜度匹配15%、奶香15%、滑順度15%、餘韻15%。<br>
+          「匹配度」會依預設品項目標(甜/茶/奶)計算差距分。
+        </div>
+      </div>
+
+      <h2 style="margin-top:18px">批次清單</h2>
+      <div style="overflow:auto; max-height:260px; border:1px solid var(--ring); border-radius:12px">
+        <table class="table" id="batchTable">
+          <thead>
+            <tr>
+              <th>時間</th><th>編號</th><th>品項</th><th>分數</th><th>甜/茶/奶</th><th>°Bx</th><th>備註</th><th class="no-print">操作</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <h2 style="margin-top:18px">分數走勢（近 10 筆）</h2>
+      <canvas id="scoreChart" height="160"></canvas>
+    </section>
+  </main>
+
+  <script>
+    // 預設目標檔（可依門市標準調整）
+    const PRESETS = {
+      "珍奶":   { sweet:7, tea:5, milk:8 },
+      "鮮奶茶": { sweet:5, tea:7, milk:8 },
+      "紅茶":   { sweet:3, tea:8, milk:0 }
+    };
+    const WEIGHTS = { aroma:0.15, tea:0.25, sweetMatch:0.15, milk:0.15, mouth:0.15, after:0.15 };
+    const PASS_LINE = 80;
+
+    // DOM 取得
+    const sampleId = document.getElementById('sampleId');
+    const tester   = document.getElementById('tester');
+    const dt       = document.getElementById('dt');
+    const chips    = document.getElementById('presetChips');
+    const inputs = {
+      aroma: document.getElementById('aroma'),
+      tea: document.getElementById('tea'),
+      sweet: document.getElementById('sweet'),
+      milk: document.getElementById('milk'),
+      mouth: document.getElementById('mouth'),
+      after: document.getElementById('after'),
+      ice: document.getElementById('ice'),
+      temp: document.getElementById('temp'),
+      brix: document.getElementById('brix'),
+      color: document.getElementById('color'),
+    };
+    const valEls = {
+      aroma: document.getElementById('aromaVal'),
+      tea: document.getElementById('teaVal'),
+      sweet: document.getElementById('sweetVal'),
+      milk: document.getElementById('milkVal'),
+      mouth: document.getElementById('mouthVal'),
+      after: document.getElementById('afterVal'),
+      ice: document.getElementById('iceVal'),
+    };
+    const scoreEl = document.getElementById('score');
+    const meterBar = document.getElementById('meterBar');
+    const statusPill = document.getElementById('statusPill');
+    const photo = document.getElementById('photo');
+    const thumb = document.getElementById('thumb');
+    const notes = document.getElementById('notes');
+    const batchTableBody = document.querySelector('#batchTable tbody');
+
+    // 顯示滑桿數值
+    function syncRangeLabels(){
+      valEls.aroma.textContent = ` ${inputs.aroma.value}`;
+      valEls.tea.textContent   = ` ${inputs.tea.value}`;
+      valEls.sweet.textContent = ` ${inputs.sweet.value}`;
+      valEls.milk.textContent  = ` ${inputs.milk.value}`;
+      valEls.mouth.textContent = ` ${inputs.mouth.value}`;
+      valEls.after.textContent = ` ${inputs.after.value}`;
+      valEls.ice.textContent   = ` ${inputs.ice.value}%`;
+    }
+    Object.values(inputs).forEach(el=>{
+      if(el && el.type === 'range') el.addEventListener('input',()=>{ syncRangeLabels(); calcAndRender(); });
+    });
+
+    // 畫面初始化
+    (function init(){
+      const now = new Date();
+      dt.value = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,16); // local datetime-local
+      syncRangeLabels();
+      attachChipEvents();
+      loadFromStorage();
+      calcAndRender();
+      setupTimer();
+      setupPhotoPreview();
+      setupButtons();
+      setupChart();
+    })();
+
+    // 快速配置
+    let currentPreset = null;
+    function attachChipEvents(){
+      chips.querySelectorAll('.chip').forEach(ch=>{
+        ch.addEventListener('click', ()=>{
+          chips.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+          ch.classList.add('active');
+          currentPreset = ch.dataset.preset;
+          applyPreset(currentPreset);
+          calcAndRender();
+        });
+      });
+    }
+    function applyPreset(key){
+      const p = PRESETS[key];
+      if(!p) return;
+      // 只調用目標參考，不直接覆蓋使用者當前輸入（避免誤觸）
+      // 但若想同時快速帶入建議初值，可取消下列註解：
+      // inputs.sweet.value = p.sweet; inputs.tea.value = p.tea; inputs.milk.value = p.milk;
+      syncRangeLabels();
+    }
+
+    // 計分
+    function computeScore(){
+      const a = +inputs.aroma.value;
+      const t = +inputs.tea.value;
+      const s = +inputs.sweet.value;
+      const m = +inputs.milk.value;
+      const mo = +inputs.mouth.value;
+      const af = +inputs.after.value;
+
+      // 匹配度（與預設目標差距，滿分 10）
+      let sweetMatch = s;
+      let milkMatch  = m;
+      let teaMatch   = t;
+      if(currentPreset && PRESETS[currentPreset]){
+        const target = PRESETS[currentPreset];
+        sweetMatch = 10 - Math.min(10, Math.abs(s - target.sweet));
+        teaMatch   = 10 - Math.min(10, Math.abs(t - target.tea));
+        milkMatch  = 10 - Math.min(10, Math.abs(m - target.milk));
+      }
+      // 將茶/奶/甜三者，以「匹配度」替代原始分數，僅茶感仍保留本體權重，以免完全由匹配主導
+      const score =
+        a * WEIGHTS.aroma +
+        t * (WEIGHTS.tea * 0.6) + teaMatch * (WEIGHTS.tea * 0.4) + // 茶感：60% 自評 + 40% 匹配
+        sweetMatch * WEIGHTS.sweetMatch +
+        m * (WEIGHTS.milk * 0.5) + milkMatch * (WEIGHTS.milk * 0.5) + // 奶香：一半自評一半匹配
+        mo * WEIGHTS.mouth +
+        af * WEIGHTS.after;
+
+      return Math.round(score * 10); // 轉為 0–100
+    }
+
+    function calcAndRender(){
+      const sc = computeScore();
+      scoreEl.textContent = String(sc);
+      meterBar.style.width = Math.min(100, sc) + '%';
+      scoreEl.classList.remove('ok','warn','bad');
+      let statusText = '—';
+      if(sc >= PASS_LINE){ scoreEl.classList.add('ok'); statusText = '通過'; }
+      else if(sc >= 70){ scoreEl.classList.add('warn'); statusText = '待優化'; }
+      else { scoreEl.classList.add('bad'); statusText = '不通過'; }
+      statusPill.textContent = '狀態：' + statusText;
+      updateChartPreview(sc);
+    }
+
+    // 照片預覽
+    function setupPhotoPreview(){
+      photo.addEventListener('change', ()=>{
+        const file = photo.files && photo.files[0];
+        if(!file){ thumb.style.display='none'; return; }
+        const reader = new FileReader();
+        reader.onload = e=>{
+          thumb.src = e.target.result;
+          thumb.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // 產生編號
+    function genId(){
+      const d = new Date();
+      const y = d.getFullYear().toString().slice(-2);
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      const hh = String(d.getHours()).padStart(2,'0');
+      const mm = String(d.getMinutes()).padStart(2,'0');
+      return `B${y}${m}${dd}-${hh}${mm}`;
+    }
+
+    // 計時器
+    let timer=null, secs=0;
+    function setupTimer(){
+      const lab = document.getElementById('timerLabel');
+      function render(){ lab.textContent = new Date(secs*1000).toISOString().substr(14,5); }
+      document.getElementById('startTimerBtn').onclick = ()=>{ if(timer) return; timer = setInterval(()=>{ secs++; render(); },1000); };
+      document.getElementById('pauseTimerBtn').onclick = ()=>{ clearInterval(timer); timer=null; };
+      document.getElementById('resetTimerBtn').onclick = ()=>{ secs=0; render(); clearInterval(timer); timer=null; };
+      render();
+    }
+
+    // 批次資料
+    let batch = [];
+    function loadFromStorage(){
+      try{
+        const raw = localStorage.getItem('drinkTests');
+        if(raw){ batch = JSON.parse(raw) || []; }
+      }catch(e){ batch = []; }
+      renderTable();
+      refreshChartData();
+    }
+    function saveToStorage(){
+      localStorage.setItem('drinkTests', JSON.stringify(batch));
+    }
+
+    function collectEntry(){
+      const sc = computeScore();
+      const file = photo.files && photo.files[0];
+      // 不存放大圖至 localStorage（避免過大），僅存預覽 DataURL（<= 300px）
+      let imgData = null;
+      if(file){
+        // 以同步方式快速建立縮圖（使用 canvas）
+        // 注意：這裡為了簡化示例，同步讀檔已由 FileReader 完成；縮圖在加入時機另行處理（非必要）
+      }
+      return {
+        t: dt.value || new Date().toISOString(),
+        id: sampleId.value || genId(),
+        preset: currentPreset || '',
+        aroma:+inputs.aroma.value, tea:+inputs.tea.value, sweet:+inputs.sweet.value,
+        milk:+inputs.milk.value, mouth:+inputs.mouth.value, after:+inputs.after.value,
+        ice:+inputs.ice.value, temp:+inputs.temp.value||null, brix:+inputs.brix.value||null,
+        color: inputs.color.value, notes: notes.value || '',
+        tester: tester.value || '',
+        score: sc
+      };
+    }
+
+    function renderTable(){
+      batchTableBody.innerHTML = '';
+      batch.forEach((e,idx)=>{
+        const tr = document.createElement('tr');
+        const tri = (v)=>{ const td=document.createElement('td'); td.textContent=v??''; return td; };
+        tr.appendChild(tri(e.t.replace('T',' ')));
+        tr.appendChild(tri(e.id));
+        tr.appendChild(tri(e.preset||'-'));
+        tr.appendChild(tri(e.score));
+        tr.appendChild(tri(`${e.sweet}/${e.tea}/${e.milk}`));
+        tr.appendChild(tri(e.brix??''));
+        tr.appendChild(tri(e.notes? (e.notes.length>12? e.notes.slice(0,12)+'…':e.notes):'' ));
+        const tdOp = document.createElement('td');
+        tdOp.className='no-print';
+        const del = document.createElement('button'); del.className='btn ghost tiny'; del.textContent='刪除';
+        del.onclick = ()=>{ batch.splice(idx,1); saveToStorage(); renderTable(); refreshChartData(); };
+        tdOp.appendChild(del);
+        tr.appendChild(tdOp);
+        batchTableBody.appendChild(tr);
+      });
+    }
+
+    // 匯出 CSV
+    function exportCSV(){
+      const heads = ['時間','編號','品項','分數','香氣','茶感','甜度','奶香','滑順','餘韻','冰量','溫度','Bx','顏色','人員','備註'];
+      const rows = batch.map(e=>[
+        e.t, e.id, e.preset, e.score, e.aroma, e.tea, e.sweet, e.milk, e.mouth, e.after,
+        e.ice, e.temp??'', e.brix??'', e.color, e.tester, (e.notes||'').replace(/\n/g,' ')
+      ]);
+      const csv = [heads.join(','), ...rows.map(r=>r.map(cell=>{
+        const s = String(cell??'');
+        return /[",\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+      }).join(','))].join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'drink_tests.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    // 圖表
+    let chart, chartData = { labels:[], values:[] };
+    function setupChart(){
+      const ctx = document.getElementById('scoreChart');
+      if(!window.Chart) return; // 無網路或 CDN 失敗時略過
+      chart = new Chart(ctx, {
+        type:'line',
+        data:{ labels: chartData.labels, datasets:[{ label:'分數', data: chartData.values, tension:0.3 }] },
+        options:{
+          responsive:true,
+          scales:{ y:{ suggestedMin:50, suggestedMax:100 } },
+          plugins:{ legend:{ display:false } }
+        }
+      });
+    }
+    function refreshChartData(){
+      const last10 = batch.slice(-10);
+      chartData.labels = last10.map(x=>x.id);
+      chartData.values = last10.map(x=>x.score);
+      if(chart){ chart.data.labels = chartData.labels; chart.data.datasets[0].data = chartData.values; chart.update(); }
+    }
+    function updateChartPreview(curScore){
+      // 預覽用：不入庫，只在右側即時顯示（用 meter 已足夠；圖表維持歷史）
+    }
+
+    // 事件
+    function setupButtons(){
+      document.getElementById('newIdBtn').onclick = ()=>{ sampleId.value = genId(); };
+      document.getElementById('addBtn').onclick = addToBatch;
+      document.getElementById('saveBtn').onclick = addToBatch;
+      document.getElementById('exportBtn').onclick = exportCSV;
+      document.getElementById('clearBtn').onclick = ()=>{
+        if(confirm('確定要清除所有批次資料？此動作無法復原。')){
+          batch = []; saveToStorage(); renderTable(); refreshChartData();
+        }
+      };
+      document.getElementById('resetFormBtn').onclick = resetForm;
+    }
+
+    function addToBatch(){
+      const entry = collectEntry();
+      batch.push(entry);
+      saveToStorage();
+      renderTable();
+      refreshChartData();
+      // 清空上傳檔（避免佔用記憶體）
+      photo.value = ''; thumb.style.display='none';
+    }
+
+    function resetForm(){
+      document.querySelector('form')?.reset();
+      inputs.aroma.value=5; inputs.tea.value=6; inputs.sweet.value=5; inputs.milk.value=6; inputs.mouth.value=6; inputs.after.value=6;
+      inputs.ice.value=30; inputs.temp.value=''; inputs.brix.value=''; inputs.color.value='#8b5cf6';
+      notes.value=''; photo.value=''; thumb.style.display='none';
+      syncRangeLabels(); calcAndRender();
+    }
+
+    // 輸入監聽
+    ['aroma','tea','sweet','milk','mouth','after','ice','temp','brix','color'].forEach(k=>{
+      inputs[k].addEventListener('input', calcAndRender);
+      inputs[k].addEventListener('change', calcAndRender);
+    });
+
+    // 快捷：Enter 直接加入批次（避免在多欄輸入後滑鼠來回）
+    document.addEventListener('keydown', (e)=>{
+      const tag = (e.target && e.target.tagName)||'';
+      if(e.key==='Enter' && (tag==='INPUT' || tag==='TEXTAREA')){
+        e.preventDefault(); addToBatch();
+      }
+    });
+  </script>
+</body>
+</html>

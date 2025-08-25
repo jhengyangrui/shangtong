@@ -88,7 +88,7 @@
 <body>
   <div class="container">
     <div class="card pad">
-      <!-- Stepper：2 步 -->
+      <!-- Stepper：4 步 -->
       <div class="stepper" role="tablist" aria-label="步驟導覽">
         <div class="step active" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1" data-step="1">
           <div class="num">1</div>
@@ -96,7 +96,15 @@
         </div>
         <div class="step" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2" data-step="2">
           <div class="num">2</div>
-          <div class="label"><b>外部連結</b><span class="sub">前往網站</span></div>
+          <div class="label"><b>外部連結 A</b><span class="sub">網站 A</span></div>
+        </div>
+        <div class="step" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3" data-step="3">
+          <div class="num">3</div>
+          <div class="label"><b>外部連結 B</b><span class="sub">網站 B</span></div>
+        </div>
+        <div class="step" role="tab" aria-selected="false" aria-controls="panel-4" id="tab-4" data-step="4">
+          <div class="num">4</div>
+          <div class="label"><b>外部連結 C</b><span class="sub">網站 C</span></div>
         </div>
         <div class="progress" aria-hidden="true"><i id="progressbar"></i></div>
       </div>
@@ -264,7 +272,6 @@
             </div>
           </div>
 
-          <!-- 右下角：Save 與 summit + 外部連結 -->
           <div class="actions">
             <button class="btn" id="btnSave">暫存</button>
             <button class="btn" id="btnGoExternal">外部連結</button>
@@ -272,26 +279,52 @@
           </div>
         </section>
 
-        <!-- Step 2：外部連結 -->
+        <!-- Step 2：外部連結 A -->
         <section class="panel" id="panel-2" role="tabpanel" aria-labelledby="tab-2">
           <div class="pad" style="background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.35);border-radius:12px;padding:16px;">
-            <b>前往外部網站</b>
+            <b>前往外部網站 A</b>
             <p class="hint">此步驟會在新分頁開啟指定網址。若瀏覽器阻擋跳出視窗，請點擊下方按鈕。</p>
           </div>
           <div class="actions" style="justify-content:flex-start;">
-            <a class="btn primary" id="btnOpenLink" href="#">打開外部網站 ↗</a>
-            <button class="btn" id="btnBack">← 回到填寫</button>
+            <a class="btn primary" id="btnOpenLink2" href="#" target="_blank" rel="noopener">打開網站 A ↗</a>
+            <button class="btn" id="btnBack2">← 回到填寫</button>
+          </div>
+        </section>
+
+        <!-- Step 3：外部連結 B -->
+        <section class="panel" id="panel-3" role="tabpanel" aria-labelledby="tab-3">
+          <div class="pad" style="background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.35);border-radius:12px;padding:16px;">
+            <b>前往外部網站 B</b>
+            <p class="hint">此步驟會在新分頁開啟指定網址。若瀏覽器阻擋跳出視窗，請點擊下方按鈕。</p>
+          </div>
+          <div class="actions" style="justify-content:flex-start;">
+            <a class="btn primary" id="btnOpenLink3" href="#" target="_blank" rel="noopener">打開網站 B ↗</a>
+            <button class="btn" id="btnBack3">← 回到填寫</button>
+          </div>
+        </section>
+
+        <!-- Step 4：外部連結 C -->
+        <section class="panel" id="panel-4" role="tabpanel" aria-labelledby="tab-4">
+          <div class="pad" style="background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.35);border-radius:12px;padding:16px;">
+            <b>前往外部網站 C</b>
+            <p class="hint">此步驟會在新分頁開啟指定網址。若瀏覽器阻擋跳出視窗，請點擊下方按鈕。</p>
+          </div>
+          <div class="actions" style="justify-content:flex-start;">
+            <a class="btn primary" id="btnOpenLink4" href="#" target="_blank" rel="noopener">打開網站 C ↗</a>
+            <button class="btn" id="btnBack4">← 回到填寫</button>
           </div>
         </section>
       </div>
 
-      <footer>© 2025 Stepper Demo · 兩步版本 · Step2 連到外部網站</footer>
+      <footer>© 2025 Stepper Demo · 四步版本 · Step2/3/4 連到外部網站</footer>
     </div>
   </div>
 
   <script>
-    // ===== 設定外部網址（請改這一行） =====
-    const EXTERNAL_URL = 'https://shangdaofood.com/?gad_source=1&gad_campaignid=19168167064&gbraid=0AAAAABzIT70S8pzKjcNIbqNAtxGOJjalA&gclid=Cj0KCQjw8KrFBhDUARIsAMvIApZ6c0RlWZpy-HR-8fq5UIs15SnOiFBQbFaNXjYcMqliV_CzdFDMWFkaAtStEALw_wcB';
+    // ===== 外部網址（請修改這三個常數即可） =====
+    const EXTERNAL_URL2 = 'https://shangdaofood.com/?gad_source=1&gad_campaignid=19168167064&gbraid=0AAAAABzIT70S8pzKjcNIbqNAtxGOJjalA&gclid=Cj0KCQjw8KrFBhDUARIsAMvIApZ6c0RlWZpy-HR-8fq5UIs15SnOiFBQbFaNXjYcMqliV_CzdFDMWFkaAtStEALw_wcB';
+    const EXTERNAL_URL3 = 'testdrink.html';
+    const EXTERNAL_URL4 = 'cart.html';
 
     // ===== LocalStorage Key =====
     const STORE_KEY = 'stepper-demo';
@@ -301,7 +334,9 @@
     const panels = Array.from(document.querySelectorAll('.panels .panel'));
     const progress = document.getElementById('progressbar');
     let idx = 0; // 0-based
-    let externalOpenedOnce = false; // 避免重複彈出多個分頁
+
+    // 僅開一次外部分頁（避免重複彈視窗）
+    const openedOnce = {2:false, 3:false, 4:false};
 
     steps.forEach((tab, i) => {
       tab.addEventListener('click', () => go(i));
@@ -321,15 +356,10 @@
       const ratio = (idx)/(steps.length-1);
       progress.style.width = (ratio*100) + '%';
 
-      // 進到 Step2 時自動開啟連結（僅一次）
-      if(idx === 1 && !externalOpenedOnce){
-        openExternal();
-        externalOpenedOnce = true;
-      }
-    }
-
-    function openExternal(){
-      window.open(EXTERNAL_URL, '_blank', 'noopener');
+      // 進到 Step2/3/4 時自動開啟對應連結（每步驟僅一次）
+      if(idx === 1 && !openedOnce[2]) { window.open(EXTERNAL_URL2, '_blank', 'noopener'); openedOnce[2]=true; }
+      if(idx === 2 && !openedOnce[3]) { window.open(EXTERNAL_URL3, '_blank', 'noopener'); openedOnce[3]=true; }
+      if(idx === 3 && !openedOnce[4]) { window.open(EXTERNAL_URL4, '_blank', 'noopener'); openedOnce[4]=true; }
     }
 
     // 初始狀態
@@ -355,13 +385,15 @@
 
     document.getElementById('btnGoExternal').addEventListener('click', () => go(1));
 
-    // ===== 綁定 Step 2 元件 =====
-    const linkBtn = document.getElementById('btnOpenLink');
-    linkBtn.href = EXTERNAL_URL;
-    linkBtn.target = '_blank';
-    linkBtn.rel = 'noopener';
+    // ===== 綁定 Step 2/3/4 元件 =====
+    const linkBtn2 = document.getElementById('btnOpenLink2');
+    const linkBtn3 = document.getElementById('btnOpenLink3');
+    const linkBtn4 = document.getElementById('btnOpenLink4');
+    linkBtn2.href = EXTERNAL_URL2; linkBtn3.href = EXTERNAL_URL3; linkBtn4.href = EXTERNAL_URL4;
 
-    document.getElementById('btnBack').addEventListener('click', () => go(0));
+    document.getElementById('btnBack2').addEventListener('click', () => go(0));
+    document.getElementById('btnBack3').addEventListener('click', () => go(0));
+    document.getElementById('btnBack4').addEventListener('click', () => go(0));
 
     // ===== Helpers =====
     function qs(sel) { return document.querySelector(sel); }
