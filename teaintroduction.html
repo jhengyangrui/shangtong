@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>商品介紹｜茶葉與糖品</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111827;
+      --ink:#e5e7eb;
+      --muted:#9ca3af;
+      --accent:#60a5fa;
+      --ring:#27364a;
+      --radius:16px;
+      --shadow:0 12px 24px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans TC";
+      color:var(--ink);
+      background: var(--bg);
+    }
+    header{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter:saturate(160%) blur(8px);
+      background:rgba(11,18,32,.7);
+      border-bottom:1px solid var(--ring);
+    }
+    .wrap{max-width:1100px; margin:0 auto; padding:16px 20px}
+    .brand{display:flex; align-items:center; gap:12px}
+    .brand .logo{width:36px; height:36px; display:grid; place-items:center; border-radius:12px; background:linear-gradient(135deg, var(--accent), #22d3ee)}
+    .brand h1{font-size:20px; margin:0}
+
+    .tabs{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap}
+    .tab{cursor:pointer; border:1px solid var(--ring); color:var(--ink); background:#0d1526; padding:10px 14px; border-radius:999px; transition:.25s ease; font-size:14px}
+    .tab[aria-selected="true"], .tab.is-active{background:linear-gradient(135deg, rgba(96,165,250,.2), rgba(34,211,238,.18)); border-color:transparent;}
+
+    main{padding:20px}
+    .section-title{margin:8px 0 14px}
+    .section-title h2{font-size:18px; margin:0}
+
+    .panel{display:none}
+    .panel.is-active{display:block}
+
+    .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:14px}
+    .card{background:var(--card); border:1px solid var(--ring); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; min-height:120px}
+    .card h3{margin:0 0 6px; font-size:16px}
+    .card p{margin:0; color:var(--muted); font-size:13px}
+
+    footer{border-top:1px solid var(--ring); margin-top:28px}
+    footer .wrap{display:flex; justify-content:space-between; align-items:center; gap:12px}
+    .small{color:var(--muted); font-size:12px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">🍃</div>
+        <h1>商品介紹</h1>
+      </div>
+      <nav class="tabs" role="tablist" aria-label="茶別切換">
+        <button class="tab is-active" id="tab-black" role="tab" aria-selected="true" aria-controls="panel-black" data-target="#panel-black">茶</button>
+        <!-- <button class="tab" id="tab-green" role="tab" aria-selected="false" aria-controls="panel-green" data-target="#panel-green">綠茶</button>
+        <button class="tab" id="tab-taiwan" role="tab" aria-selected="false" aria-controls="panel-taiwan" data-target="#panel-taiwan">台灣茶</button>
+        <button class="tab" id="tab-japan" role="tab" aria-selected="false" aria-controls="panel-japan" data-target="#panel-japan">日本茶</button> -->
+        <button class="tab" id="tab-sugar" role="tab" aria-selected="false" aria-controls="panel-sugar" data-target="#panel-sugar">糖</button>
+        <button class="tab" id="tab-milk" role="tab" aria-selected="false" aria-controls="panel-milk" data-target="#panel-milk">奶精</button>
+        <button class="tab" id="tab-side" role="tab" aria-selected="false" aria-controls="panel-side" data-target="#panel-side">奶精</button>
+        <button class="tab" id="tab-juice" role="tab" aria-selected="false" aria-controls="panel-juice" data-target="#panel-juice">果汁</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- 紅茶 -->
+    <section id="panel-black" class="panel is-active" role="tabpanel" aria-labelledby="tab-black">
+      <div class="section-title"><h2>紅茶</h2></div>
+      <div class="grid">
+        <article class="card"><h3>阿薩姆紅茶</h3><p>Assam Black Tea</p></article>
+        <article class="card"><h3>錫蘭紅茶</h3><p>Ceylon Black Tea</p></article>
+        <article class="card"><h3>大吉嶺紅茶</h3><p>Darjeeling Black Tea</p></article>
+        <article class="card"><h3>南非國寶茶</h3><p>Rooibos</p></article>
+        <article class="card"><h3>伯爵紅茶</h3><p>Earl Grey</p></article>
+      </div>
+      <div class="section-title"><h2>綠茶</h2></div>
+      <div class="grid">
+        <article class="card"><h3>茉香綠茶</h3><p>Jasmine Green Tea (茶味)</p></article>
+        <article class="card"><h3>特香綠茶</h3><p>Premium Aroma Green (花味)</p></article>
+        <article class="card"><h3>茉莉香片</h3><p>Jasmine Scented (花味+)</p></article>
+        <article class="card"><h3>珠露綠茶</h3><p>Emerald Drop Green</p></article>
+        <article class="card"><h3>翠玉綠茶</h3><p>Tsui Yu (茶味+)</p></article>
+      </div>
+      <div class="section-title"><h2>台灣茶 (半發酵)</h2></div>
+      <div class="grid">
+        <article class="card"><h3>碳焙烏龍茶</h3><p>Charcoal Roasted Oolong</p></article>
+        <article class="card"><h3>四季春</h3><p>Four Seasons Spring Tea</p></article>
+        <article class="card"><h3>東方美人茶</h3><p>Oriental Beauty</p></article>
+        <article class="card"><h3>鐵觀音</h3><p>Tieguanyin</p></article>
+        <article class="card"><h3>黃金烏龍茶</h3><p>Golden Oolong</p></article>
+      </div>
+      <div class="section-title"><h2>日本茶 (靜岡)</h2></div>
+      <div class="grid">
+        <article class="card"><h3>玄米茶</h3><p>Genmaicha</p></article>
+        <article class="card"><h3>玄米煎茶</h3><p>Genmai Sencha</p></article>
+        <article class="card"><h3>煎茶</h3><p>Sencha</p></article>
+        <article class="card"><h3>日式純抹茶</h3><p>Matcha</p></article>
+      </div>
+    </section>
+
+    <!-- 綠茶 -->
+    <!-- <section id="panel-green" class="panel" role="tabpanel" aria-labelledby="tab-green">
+      <div class="section-title"><h2>綠茶</h2></div>
+      <div class="grid">
+        <article class="card"><h3>茉香綠茶</h3><p>Jasmine Green Tea (茶味)</p></article>
+        <article class="card"><h3>特香綠茶</h3><p>Premium Aroma Green (花味)</p></article>
+        <article class="card"><h3>茉莉香片</h3><p>Jasmine Scented (花味+)</p></article>
+        <article class="card"><h3>珠露綠茶</h3><p>Emerald Drop Green</p></article>
+        <article class="card"><h3>翠玉綠茶</h3><p>Tsui Yu (茶味+)</p></article>
+      </div>
+    </section> -->
+
+    <!-- 台灣茶 -->
+    <!-- <section id="panel-taiwan" class="panel" role="tabpanel" aria-labelledby="tab-taiwan">
+      <div class="section-title"><h2>台灣茶 (半發酵)</h2></div>
+      <div class="grid">
+        <article class="card"><h3>碳焙烏龍茶</h3><p>Charcoal Roasted Oolong</p></article>
+        <article class="card"><h3>四季春</h3><p>Four Seasons Spring Tea</p></article>
+        <article class="card"><h3>東方美人茶</h3><p>Oriental Beauty</p></article>
+        <article class="card"><h3>鐵觀音</h3><p>Tieguanyin</p></article>
+        <article class="card"><h3>黃金烏龍茶</h3><p>Golden Oolong</p></article>
+      </div>
+    </section> -->
+
+    <!-- 日本茶 -->
+    <!-- <section id="panel-japan" class="panel" role="tabpanel" aria-labelledby="tab-japan">
+      <div class="section-title"><h2>日本茶 (靜岡)</h2></div>
+      <div class="grid">
+        <article class="card"><h3>玄米茶</h3><p>Genmaicha</p></article>
+        <article class="card"><h3>玄米煎茶</h3><p>Genmai Sencha</p></article>
+        <article class="card"><h3>煎茶</h3><p>Sencha</p></article>
+        <article class="card"><h3>日式純抹茶</h3><p>Matcha</p></article>
+      </div>
+    </section> -->
+
+    <!-- 糖 -->
+    <section id="panel-sugar" class="panel" role="tabpanel" aria-labelledby="tab-sugar">
+      <div class="section-title"><h2>大宗果糖</h2></div>
+      <div class="grid">
+        <article class="card"><h3>環泰果糖</h3><p>Huan Tai Fructose</p></article>
+        <article class="card"><h3>台榮果糖</h3><p>Tai Rong Fructose</p></article>
+      </div> 
+      <div class="section-title"><h2>調茶專用糖</h2></div>
+      <div class="grid">
+        <article class="card"><h3>特調糖漿</h3><p>Huan Tai Fructose</p></article>
+        <article class="card"><h3>黑  糖  蜜</h3><p>Tai Rong Fructose</p></article>
+        <article class="card"><h3>焦糖</h3><p>Tai Rong Fructose</p></article>
+        <article class="card"><h3>蔗糖</h3><p>Tai Rong Fructose</p></article>
+      </div> 
+      <div class="section-title"><h2>花系列風味糖漿</h2></div>
+      <div class="grid">
+        <article class="card"><h3>珠露風味糖漿</h3><p>Huan Tai Fructose</p></article>
+        <article class="card"><h3>茶花風味糖漿</h3><p>Tai Rong Fructose</p></article>
+        <article class="card"><h3>雪梨風味糖漿</h3><p>Tai Rong Fructose</p></article>
+        <article class="card"><h3>阿薩姆風味糖漿</h3><p>Tai Rong Fructose</p></article>
+      </div> 
+    </section>
+
+    <section id="panel-milk" class="panel" role="tabpanel" aria-labelledby="tab-milk">
+      <div class="section-title"><h2>大宗品牌</h2></div>
+      <div class="grid">
+        <article class="card"><h3>三花奶精</h3><p>Huan Tai Fructose</p></article>
+        <article class="card"><h3>鳥牌奶精</h3><p>Tai Rong Fructose</p></article>
+        <article class="card"><h3>飛馬奶精</h3><p>Tai Rong Fructose</p></article>
+      </div> 
+      <div class="section-title"><h2>客製化</h2></div>
+      <div class="grid">
+        <article class="card"><h3>典藏奶精-仿三花</h3><p>Huan Tai Fructose</p></article>
+        <article class="card"><h3>頂級奶精-茶咖啡</h3><p>Tai Rong Fructose</p></article>
+        <article class="card"><h3>特級奶精-咖啡</h3><p>Tai Rong Fructose</p></article>
+        <article class="card"><h3>奶茶專用奶精</h3><p>Tai Rong Fructose</p></article>
+        <article class="card"><h3>義式奶精-咖啡</h3><p>Tai Rong Fructose</p></article>
+      </div> 
+    </section>
+
+    <section id="panel-side" class="panel" role="tabpanel" aria-labelledby="tab-side">
+      <div class="section-title"><h2>珍珠</h2></div>
+      <div class="grid">
+        <article class="card"><h3>D2.5</h3><p>Huan Tai Fructose</p></article>
+        <article class="card"><h3>D2.0</h3><p>Tai Rong Fructose</p></article>
+        <article class="card"><h3>D1.2</h3><p>Tai Rong Fructose</p></article>
+      </div> 
+      <div class="section-title"><h2>椰果</h2></div>
+      <div class="grid">
+        <article class="card"><h3>椰果丁</h3><p>Huan Tai Fructose</p></article>
+        <article class="card"><h3>椰果球</h3><p>Tai Rong Fructose</p></article>
+      </div> 
+    </section>
+
+    <section id="panel-juice" class="panel" role="tabpanel" aria-labelledby="tab-juice">
+      <div class="section-title"><h2>果汁</h2></div>
+      <div class="grid">
+      </div> 
+
+    </section>
+
+    <footer>
+      <div class="wrap">
+        <div class="small">© 茶舖示例頁 · 單檔 HTML · 可自由修改/擴充</div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.querySelectorAll('.tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = document.querySelector(btn.dataset.target);
+        document.querySelectorAll('.tab').forEach(b=>{
+          b.classList.remove('is-active');
+          b.setAttribute('aria-selected','false');
+        });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-selected','true');
+        document.querySelectorAll('.panel').forEach(p=>p.classList.remove('is-active'));
+        if(target) target.classList.add('is-active');
+      });
+    });
+  </script>
+</body>
+</html>

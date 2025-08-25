@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>報表範例</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-color: #1f2937;
+      --card-color: #374151;
+      --text-color: #f9fafb;
+      --accent-color: #3b82f6;
+      --btn-hover: #2563eb;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      background-color: var(--card-color);
+      width: 100%;
+    }
+
+    .button-group {
+      margin-top: 1rem;
+    }
+
+    .button-group button {
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin: 0.3rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .button-group button:hover {
+      background-color: var(--btn-hover);
+    }
+
+    .row-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      width: 90%;
+      max-width: 1000px;
+      margin-top: 1.5rem;
+    }
+
+    .chart-box, .ranking-box {
+      background-color: var(--card-color);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    .chart-box {
+      flex: 2;
+      min-width: 300px;
+    }
+
+    .ranking-box {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .ranking-box h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      border-bottom: 1px solid #4b5563;
+      padding-bottom: 0.5rem;
+    }
+
+    .ranking-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .ranking-list li {
+      padding: 0.3rem 0;
+      font-size: 1rem;
+    }
+
+    .bottom-chart {
+      width: 90%;
+      max-width: 1000px;
+      margin-top: 1.5rem;
+      background-color: var(--card-color);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    canvas {
+      width: 100%;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>📊 飲品月營收報表</header>
+
+  <div class="button-group">
+    <button onclick="updateChart('珍奶')">珍奶</button>
+    <button onclick="updateChart('鮮奶茶')">鮮奶茶</button>
+    <button onclick="updateChart('紅茶')">紅茶</button>
+  </div>
+
+  <!-- 並列：長條圖 + 熱銷排行 -->
+  <div class="row-container">
+    <div class="chart-box">
+      <canvas id="revenueChart"></canvas>
+    </div>
+    <div class="ranking-box">
+      <h2>🔥 熱銷排行</h2>
+      <ol class="ranking-list" id="rankingList">
+        <!-- JS 插入 -->
+      </ol>
+    </div>
+  </div>
+
+  <!-- 折線圖 -->
+  <div class="bottom-chart">
+    <canvas id="trendChart"></canvas>
+  </div>
+
+  <script>
+    const chartData = {
+      "珍奶": [22, 30, 18, 24, 27, 35],
+      "鮮奶茶": [12, 19, 25, 22, 18, 20],
+      "紅茶": [8, 14, 11, 9, 10, 12]
+    };
+
+    const labels = ['1月', '2月', '3月', '4月', '5月', '6月'];
+
+    // 長條圖初始化
+    const ctx1 = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '營收（萬元） - 珍奶',
+          data: chartData['珍奶'],
+          backgroundColor: 'rgba(59, 130, 246, 0.7)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: '#f9fafb' } }
+        },
+        scales: {
+          x: { ticks: { color: '#f9fafb' }, grid: { color: '#4b5563' } },
+          y: { ticks: { color: '#f9fafb' }, grid: { color: '#4b5563' }, beginAtZero: true }
+        }
+      }
+    });
+
+    // 折線圖初始化
+    const totalRevenue = labels.map((_, i) =>
+      chartData['珍奶'][i] + chartData['鮮奶茶'][i] + chartData['紅茶'][i]
+    );
+
+    const ctx2 = document.getElementById('trendChart').getContext('2d');
+    const trendChart = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: '總營收趨勢（萬元）',
+          data: totalRevenue,
+          fill: false,
+          borderColor: 'rgba(255, 206, 86, 1)',
+          backgroundColor: 'rgba(255, 206, 86, 0.5)',
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: '#f9fafb' } }
+        },
+        scales: {
+          x: { ticks: { color: '#f9fafb' }, grid: { color: '#4b5563' } },
+          y: { ticks: { color: '#f9fafb' }, grid: { color: '#4b5563' }, beginAtZero: true }
+        }
+      }
+    });
+
+    // 更新長條圖
+    function updateChart(drinkType) {
+      revenueChart.data.datasets[0].data = chartData[drinkType];
+      revenueChart.data.datasets[0].label = `營收（萬元） - ${drinkType}`;
+      revenueChart.update();
+    }
+
+    // 產生熱銷排行
+    function renderRanking() {
+      const totals = Object.entries(chartData).map(([name, arr]) => {
+        return { name, total: arr.reduce((a, b) => a + b, 0) };
+      });
+
+      totals.sort((a, b) => b.total - a.total);
+
+      const rankingList = document.getElementById('rankingList');
+      rankingList.innerHTML = '';
+      totals.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name}：${item.total} 萬元`;
+        rankingList.appendChild(li);
+      });
+    }
+
+    renderRanking();
+  </script>
+
+</body>
+</html>
