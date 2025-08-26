@@ -5,11 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kahoot 飲品訓練測驗｜HTML 互動版</title>
   <style>
-    :root{
-      --bg:#0b1220; --card:#111827; --ink:#e5e7eb; --muted:#9ca3af;
-      --accent:#38bdf8; --ok:#22c55e; --no:#ef4444; --ring:#1f2937;
-      --warn:#f59e0b;
+    :root {
+      --bg: #f3f4f6; /* Bright background */
+      --card: #ffffff; /* Bright card background */
+      --ink: #1f2937; /* Darker text color for contrast */
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --ok: #10b981;
+      --no: #ef4444;
+      --ring: #d1d5db;
+      --warn: #f59e0b;
     }
+
     *{box-sizing:border-box}
     body{margin:0;font-family:system-ui,"Noto Sans TC",Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0b1220,#0e172a);color:var(--ink)}
     header{position:sticky;top:0;z-index:10;background:rgba(10,14,25,.8);backdrop-filter:saturate(150%) blur(8px);border-bottom:1px solid var(--ring)}
@@ -28,7 +35,11 @@
     .warn{background:linear-gradient(180deg,#f59e0b,#d97706);border-color:#f59e0b}
     .grid{display:grid;gap:16px;margin-top:22px}
     .q{
-      background:linear-gradient(180deg,#0e172a,#0b1220);border:1px solid var(--ring);border-radius:16px;padding:16px 16px 12px;box-shadow:0 8px 18px rgba(0,0,0,.35)
+      background:var(--card); /* Bright card background */
+      border:1px solid var(--ring);
+      border-radius:16px;
+      padding:16px 16px 12px;
+      box-shadow:0 8px 18px rgba(0,0,0,.1); /* Softer shadow */
     }
     .q h3{margin:0 0 10px;font-size:18px;line-height:1.4}
     .en{display:block;color:var(--muted);font-weight:500}
@@ -45,7 +56,8 @@
     .wrong{border-color:rgba(239,68,68,.55)!important; background:rgba(239,68,68,.06)!important}
     .hint{color:#bbf7d0}
     .score{
-      margin-top:14px;padding:12px 16px;border:1px dashed var(--ring);border-radius:12px;background:#0b1628;color:var(--ink)
+      margin-top:14px;padding:12px 16px;border:1px dashed var(--ring);border-radius:12px;background:#f9fafb; /* Bright score background */
+      color:var(--ink)
     }
     .progress{height:10px;background:#0b1628;border:1px solid var(--ring);border-radius:999px;overflow:hidden;margin-top:14px}
     .bar{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#0ea5e9)}

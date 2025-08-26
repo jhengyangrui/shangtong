@@ -7,27 +7,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --ink: #f1f5f9;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --ring: #334155;
+      --bg: #f3f4f6; /* Bright background */
+      --card: #ffffff; /* Bright card background */
+      --ink: #92baf1; /* Darker text color for contrast */
+      --muted: #a0b4db;
+      --accent: #9bb9fc;
+      --ring: #d1d5db;
       --ok: #10b981;
       --warn: #f59e0b;
       --danger: #ef4444;
       --radius: 16px;
-      --shadow: 0 12px 24px rgba(0,0,0,.35);
+      --shadow: 0 4px 12px rgba(238, 179, 179, 0.1);
     }
+
     * { box-sizing: border-box; }
-    body { margin: 0; background: linear-gradient(180deg,#0f172a,#1e293b 60%); color: var(--ink); font-family: 'Noto Sans TC', system-ui, sans-serif; }
+    body { margin: 0; background: linear-gradient(180deg, var(--bg), #e5e7eb 60%); color: var(--ink); font-family: 'Noto Sans TC', system-ui, sans-serif; }
     .container { max-width: 920px; margin: 0 auto; padding: 40px 24px; }
     h1 { font-size: clamp(28px, 4vw, 40px); margin: 0 0 10px; }
     p { color: var(--muted); margin-bottom: 24px; }
-    .card { background: var(--card); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius); box-shadow: var(--shadow); padding: 30px; }
+    .card { background: var(--card); border: 1px solid var(--ring); border-radius: var(--radius); box-shadow: var(--shadow); padding: 30px; }
 
     /* Stepper */
-    .stepper { display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 18px; border-radius: 14px; margin-bottom: 20px; position: relative; overflow: hidden; }
+    .stepper { display: flex; justify-content: space-between; background: rgba(69, 223, 133, 0.03); border: 1px solid rgba(255,255,255,0.08); padding: 18px; border-radius: 14px; margin-bottom: 20px; position: relative; overflow: hidden; }
     .step { display: flex; flex-direction: column; align-items: center; cursor: pointer; position: relative; flex: 1; transition: 0.2s; z-index: 1; }
     .step:not(:last-child)::after { content: ''; position: absolute; right: -50%; top: 50%; height: 2px; width: 100%; background: rgba(255,255,255,0.1); transform: translateY(-50%); z-index: 0; }
     .num { width: 32px; height: 32px; border-radius: 999px; display: grid; place-items: center; font-weight: bold; color: var(--muted); border: 2px solid var(--ring); margin-bottom: 6px; background: #0f172a; }
@@ -49,13 +50,13 @@
     .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
     .actions { display: flex; justify-content: flex-end; margin-top: 24px; gap: 10px; }
     .btn { padding: 10px 18px; border-radius: 10px; background: #1e293b; color: var(--ink); border: 1px solid var(--ring); cursor: pointer; transition: 0.2s; }
-    .btn:hover { background: var(--accent); color: #03121a; }
+    .btn:hover { background: var(--accent); color: #1e9ce0; }
     .btn.primary { background: var(--accent); border: none; color: #03121a; }
     .btn[disabled] { opacity: 0.5; cursor: not-allowed; }
 
     .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media (max-width: 768px) { .summary { grid-template-columns: 1fr; } }
-    .kv { background: rgba(255,255,255,.03); border: 1px dashed rgba(255,255,255,.08); padding: 14px; border-radius: 10px; }
+    .kv { background: rgba(149, 209, 218, 0.03); border: 1px dashed rgba(255,255,255,.08); padding: 14px; border-radius: 10px; }
     .kv b { display: block; margin-bottom: 4px; }
     footer { margin-top: 30px; color: var(--muted); text-align: center; font-size: 13px; }
 
@@ -73,16 +74,41 @@
       display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; padding: 12px; border: 1px solid var(--ring); border-radius: 10px; background: #0f1a2e;
     }
     .business-options label, .type-options label, .course-options label, .channel-options label, .area-options label, .source-options label, .demand-options label {
-      display: flex; align-items: center; gap: 6px; font-size: 16px; white-space: nowrap;
+      display: flex; align-items: center; gap: 8px; /* Space between checkbox and text */
+      font-size: 16px;
+      white-space: nowrap;
     }
     .business-options input[type="checkbox"], .type-options input[type="checkbox"], .course-options input[type="checkbox"], .channel-options input[type="checkbox"], .area-options input[type="checkbox"], .source-options input[type="checkbox"], .demand-options input[type="checkbox"] {
-      transform: scale(1.2); accent-color: var(--accent);
+      transform: scale(1.2); /* Adjust checkbox size */
+      accent-color: var(--accent); /* Use the accent color */
+      margin-right: 8px; /* Add space between checkbox and text */
     }
 
     .business-options .other-biz, .area-options .other-area, .source-options .other-source { gap: 8px; }
-    .business-options .biz-note, .area-options .area-note, .source-options .source-note { flex: 1; min-width: 100px; font-size: 14px; }
+    .business-options .biz-note, .area-options .area-note, .source-options .source-note {
+      flex: 1;
+      min-width: 100px;
+      font-size: 14px;
+    }
 
     #interview { font-size: 15px; line-height: 1.6; }
+
+    /* Add this rule to make span text bright */
+    span {
+      color: #8aabf3; /* Bright blue color */
+    }
+      /* 讓文字靠右 */
+  .shop-options label,
+  .business-options label,
+  .type-options label,
+  .course-options label,
+  .channel-options label,
+  .area-options label,
+  .source-options label,
+  .demand-options label {
+    justify-content: flex-start; /* 將文字靠右 */
+    text-align: left; /* 文字對齊左側 */
+  }
   </style>
 </head>
 <body>
@@ -159,7 +185,7 @@
               <div class="shop-options">
                 <label><input type="checkbox" name="shop" value="茶飲店" /> 茶飲店</label>
                 <label><input type="checkbox" name="shop" value="冰品店" /> 冰品店</label>
-                <label><input type="checkbox" name="shop" value="複合式簡餐" /> 複合式簡餐</label>
+                <label><input type="checkbox" name="shop" value="複合式簡餐" /> 褘合式簡餐</label>
                 <label><input type="checkbox" name="shop" value="咖啡店" /> 咖啡店</label>
                 <label><input type="checkbox" name="shop" value="早餐店" /> 早餐店</label>
                 <label><input type="checkbox" name="shop" value="炸雞店" /> 炸雞店</label>
