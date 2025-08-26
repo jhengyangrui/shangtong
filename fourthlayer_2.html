@@ -354,6 +354,48 @@
     justify-content: flex-start; /* 將文字靠右 */
     text-align: left; /* 文字對齊左側 */
   }
+
+  /* 修正背景顏色 */
+  .shop-options,
+  .business-options,
+  .type-options,
+  .course-options,
+  .channel-options,
+  .area-options,
+  .source-options,
+  .demand-options {
+    background: var(--card); /* 使用亮色背景 */
+    border: 1px solid var(--ring);
+    border-radius: 10px;
+    padding: 12px;
+  }
+
+  .radio-group {
+    background: var(--card); /* 使用亮色背景 */
+    border: 1px solid var(--ring);
+    border-radius: 10px;
+    padding: 12px;
+  }
+
+  .shop-options label,
+  .business-options label,
+  .type-options label,
+  .course-options label,
+  .channel-options label,
+  .area-options label,
+  .source-options label,
+  .demand-options label {
+    color: var(--ink); /* 確保文字顏色與亮色背景對比清晰 */
+  }
+
+  .shop-options .shop-note,
+  .business-options .biz-note,
+  .area-options .area-note,
+  .source-options .source-note {
+    background: var(--card); /* 使用亮色背景 */
+    border: 1px solid var(--ring);
+    color: var(--ink);
+  }
   </style>
 </head>
 <body>
