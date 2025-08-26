@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kahoot 飲品訓練測驗｜HTML 互動版</title>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#111827; --ink:#e5e7eb; --muted:#9ca3af;
+      --accent:#38bdf8; --ok:#22c55e; --no:#ef4444; --ring:#1f2937;
+      --warn:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,"Noto Sans TC",Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#0b1220,#0e172a);color:var(--ink)}
+    header{position:sticky;top:0;z-index:10;background:rgba(10,14,25,.8);backdrop-filter:saturate(150%) blur(8px);border-bottom:1px solid var(--ring)}
+    .wrap{max-width:1100px;margin:auto;padding:24px}
+    h1{margin:0;font-weight:800;letter-spacing:.3px}
+    .sub{color:var(--muted);margin-top:6px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+    button{
+      border:1px solid var(--ring);background:#0e172a;color:var(--ink);padding:10px 14px;border-radius:12px;
+      cursor:pointer;transition:transform .03s ease, border-color .2s ease, background .2s ease
+    }
+    button:hover{border-color:var(--accent)}
+    button:active{transform:translateY(1px)}
+    .primary{background:linear-gradient(180deg,#0ea5e9,#0284c7);border-color:#0ea5e9}
+    .ok{background:linear-gradient(180deg,#22c55e,#16a34a);border-color:#22c55e}
+    .warn{background:linear-gradient(180deg,#f59e0b,#d97706);border-color:#f59e0b}
+    .grid{display:grid;gap:16px;margin-top:22px}
+    .q{
+      background:linear-gradient(180deg,#0e172a,#0b1220);border:1px solid var(--ring);border-radius:16px;padding:16px 16px 12px;box-shadow:0 8px 18px rgba(0,0,0,.35)
+    }
+    .q h3{margin:0 0 10px;font-size:18px;line-height:1.4}
+    .en{display:block;color:var(--muted);font-weight:500}
+    .opts{display:grid;gap:10px;margin-top:8px}
+    .opt{
+      display:flex;align-items:center;gap:10px;border:1px solid #233044;background:#0b1628;border-radius:12px;padding:10px;cursor:pointer;
+      transition:border-color .2s ease, background .2s ease
+    }
+    .opt:hover{border-color:var(--accent);background:#0c1a30}
+    .opt input{accent-color:var(--accent);transform:scale(1.1)}
+    .meta{display:flex;align-items:center;gap:10px;margin-top:10px;color:var(--muted);font-size:14px}
+    .pill{border:1px solid var(--ring);padding:2px 8px;border-radius:999px}
+    .correct{border-color:rgba(34,197,94,.5)!important; background:rgba(34,197,94,.08)!important}
+    .wrong{border-color:rgba(239,68,68,.55)!important; background:rgba(239,68,68,.06)!important}
+    .hint{color:#bbf7d0}
+    .score{
+      margin-top:14px;padding:12px 16px;border:1px dashed var(--ring);border-radius:12px;background:#0b1628;color:var(--ink)
+    }
+    .progress{height:10px;background:#0b1628;border:1px solid var(--ring);border-radius:999px;overflow:hidden;margin-top:14px}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#0ea5e9)}
+    footer{color:var(--muted);text-align:center;margin:32px 0;font-size:13px}
+    .small{font-size:12px;color:var(--muted)}
+    @media (min-width:900px){ .grid{grid-template-columns:1fr 1fr} }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>Kahoot 飲品訓練測驗 <span class="small">（HTML 互動版）</span></h1>
+      <p class="sub">點選選項完成 10 題；按「立即評分」查看分數與解析。可重做、可顯示正解。</p>
+      <div class="actions">
+        <button class="primary" id="gradeBtn">立即評分</button>
+        <button id="showAnsBtn">顯示正確答案</button>
+        <button class="warn" id="clearBtn">重置全部</button>
+      </div>
+      <div class="score" id="scoreBox" aria-live="polite">尚未作答</div>
+      <div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="grid" id="quiz">
+      <!-- Q1 -->
+      <article class="q" data-qid="q1">
+        <h3><span class="en">1. What type of tea is fully fermented?</span>全發酵茶是什麼茶？</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q1" value="0"> Black Tea 紅茶</label>
+          <label class="opt"><input type="radio" name="q1" value="1"> Green Tea 綠茶</label>
+          <label class="opt"><input type="radio" name="q1" value="2"> Oolong Tea 烏龍茶</label>
+          <label class="opt"><input type="radio" name="q1" value="3"> Japanese Tea 日本茶</label>
+        </div>
+        <div class="meta"><span class="pill">發酵知識</span></div>
+      </article>
+
+      <!-- Q2 -->
+      <article class="q" data-qid="q2">
+        <h3><span class="en">2. What type of tea is partially fermented?</span>半發酵茶是什麼茶？</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q2" value="0"> Black Tea 紅茶</label>
+          <label class="opt"><input type="radio" name="q2" value="1"> Green Tea 綠茶</label>
+          <label class="opt"><input type="radio" name="q2" value="2"> Oolong Tea 烏龍茶</label>
+          <label class="opt"><input type="radio" name="q2" value="3"> Japanese Tea 日本茶</label>
+        </div>
+        <div class="meta"><span class="pill">茶類分類</span></div>
+      </article>
+
+      <!-- Q3 -->
+      <article class="q" data-qid="q3">
+        <h3><span class="en">3. What is Earl Grey tea made from?</span>伯爵加味茶是怎麼形成的？</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q3" value="0"> Oolong + Fingered Citron 烏龍茶 + 佛手柑</label>
+          <label class="opt"><input type="radio" name="q3" value="1"> Black tea + Fingered Citron 紅茶 + 佛手柑</label>
+          <label class="opt"><input type="radio" name="q3" value="2"> Black tea + Orange 紅茶 + 橘子</label>
+          <label class="opt"><input type="radio" name="q3" value="3"> Oolong + Orange 烏龍茶 + 橘子</label>
+        </div>
+        <div class="meta"><span class="pill">風味來源</span></div>
+      </article>
+
+      <!-- Q4 -->
+      <article class="q" data-qid="q4">
+        <h3><span class="en">4. What specific ingredient is added in special sugar?</span>特糖中有什麼特殊成份？</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q4" value="0"> Mint 薄荷</label>
+          <label class="opt"><input type="radio" name="q4" value="1"> Honey 蜂蜜</label>
+          <label class="opt"><input type="radio" name="q4" value="2"> Maple sugar 楓糖</label>
+          <label class="opt"><input type="radio" name="q4" value="3"> Maltose 麥芽糖</label>
+        </div>
+        <div class="meta"><span class="pill">配方概念</span></div>
+      </article>
+
+      <!-- Q5 -->
+      <article class="q" data-qid="q5">
+        <h3><span class="en">5. What is the difference between creamer and milk powder?</span>奶精和奶粉有什麼差別？</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q5" value="0"> Color 顏色不一樣</label>
+          <label class="opt"><input type="radio" name="q5" value="1"> Protein content 蛋白質含量不同</label>
+          <label class="opt"><input type="radio" name="q5" value="2"> Vitamin content 維生素含量不同</label>
+          <label class="opt"><input type="radio" name="q5" value="3"> Fat content 脂肪含量不同</label>
+        </div>
+        <div class="meta"><span class="pill">乳製品知識</span></div>
+      </article>
+
+      <!-- Q6 -->
+      <article class="q" data-qid="q6">
+        <h3><span class="en">6. What is the cooking & stewing time for 2.5D tapioca?</span>2.5D 珍珠煮多久、燜多久？</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q6" value="0"> 煮 25 分鐘，燜 25 分鐘 (Cook 25m, Stew 25m)</label>
+          <label class="opt"><input type="radio" name="q6" value="1"> 煮 5 分鐘，燜 5 分鐘 (Cook 5m, Stew 5m)</label>
+          <label class="opt"><input type="radio" name="q6" value="2"> 煮 30 分鐘，燜 30 分鐘 (Cook 30m, Stew 30m)</label>
+          <label class="opt"><input type="radio" name="q6" value="3"> 煮 15 分鐘，燜 15 分鐘 (Cook 15m, Stew 15m)</label>
+        </div>
+        <div class="meta"><span class="pill">出餐流程</span></div>
+      </article>
+
+      <!-- Q7 -->
+      <article class="q" data-qid="q7">
+        <h3><span class="en">7. What are the four components of bubble milk tea?</span>珍珠奶茶有哪四種原料？</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q7" value="0"> Tea, Sugar, Milk, Tapioca 茶、糖、奶、珍珠</label>
+          <label class="opt"><input type="radio" name="q7" value="1"> Tea, Bean, Milk, Tapioca 茶、豆類、奶、珍珠</label>
+          <label class="opt"><input type="radio" name="q7" value="2"> Juice, Sugar, Milk, Tapioca 果汁、糖、奶、珍珠</label>
+          <label class="opt"><input type="radio" name="q7" value="3"> Tea, Sugar, Baking Soda, Tapioca 茶、糖、蘇打粉、珍珠</label>
+        </div>
+        <div class="meta"><span class="pill">經典配方</span></div>
+      </article>
+
+      <!-- Q8 -->
+      <article class="q" data-qid="q8">
+        <h3><span class="en">8. Which tea gives a more appealing color for fruit tea?</span>製作水果茶，哪種茶的基底顏色較好看？</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q8" value="0"> Black Tea 紅茶</label>
+          <label class="opt"><input type="radio" name="q8" value="1"> Green Tea 綠茶</label>
+          <label class="opt"><input type="radio" name="q8" value="2"> Oolong Tea 烏龍茶</label>
+          <label class="opt"><input type="radio" name="q8" value="3"> Japanese Tea 日本茶</label>
+        </div>
+        <div class="meta"><span class="pill">視覺呈現</span></div>
+      </article>
+
+      <!-- Q9 -->
+      <article class="q" data-qid="q9">
+        <h3><span class="en">9. Why is unsweetened lemon tea not recommended?</span>為什麼不建議做無糖檸檬茶？</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q9" value="0"> 檸檬本身沒味道 Lemons have no flavor</label>
+          <label class="opt"><input type="radio" name="q9" value="1"> 加糖可增加酸味 Sugar enhances sourness</label>
+          <label class="opt"><input type="radio" name="q9" value="2"> 成品會又酸又苦又澀 It turns sour, bitter, astringent</label>
+          <label class="opt"><input type="radio" name="q9" value="3"> 加糖讓顏色更漂亮 Sugar makes color prettier</label>
+        </div>
+        <div class="meta"><span class="pill">風味平衡</span></div>
+      </article>
+
+      <!-- Q10 -->
+      <article class="q" data-qid="q10">
+        <h3><span class="en">10. What ingredients are needed to make apple black tea?</span>製作蘋果紅茶需要哪些原料？</h3>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="q10" value="0"> Green Tea, Apple syrup, Fructose 綠茶、蘋果汁、果糖</label>
+          <label class="opt"><input type="radio" name="q10" value="1"> Black Tea, Apple syrup, Fructose 紅茶、蘋果汁、果糖</label>
+          <label class="opt"><input type="radio" name="q10" value="2"> Black Tea, Apple syrup, Black sugar 紅茶、蘋果汁、黑糖蜜</label>
+          <label class="opt"><input type="radio" name="q10" value="3"> Black Tea, Apple cider, Fructose 紅茶、蘋果酒、果糖</label>
+        </div>
+        <div class="meta"><span class="pill">出品配方</span></div>
+      </article>
+    </section>
+
+    <footer>
+      <p>題目來源：Kahoot Game Quiz（內部訓練）</p>
+    </footer>
+  </main>
+
+  <script>
+    // === 可修改的答案設定（0 = 第一個選項） ===
+    const answerKey = {
+      q1: 0,  // Black Tea
+      q2: 2,  // Oolong Tea
+      q3: 1,  // Black + Fingered Citron
+      q4: 2,  // Maple sugar（若貴司定義不同，改這裡即可）
+      q5: 1,  // Protein content
+      q6: 0,  // 25/25
+      q7: 0,  // Tea, Sugar, Milk, Tapioca
+      q8: 1,  // Green Tea
+      q9: 2,  // Sour, bitter, astringent
+      q10: 1, // Black Tea + Apple syrup + Fructose
+    };
+
+    const quiz = document.getElementById('quiz');
+    const scoreBox = document.getElementById('scoreBox');
+    const bar = document.getElementById('bar');
+
+    function getAnsweredCount(){
+      let n = 0;
+      Object.keys(answerKey).forEach(q=>{
+        const sel = quiz.querySelector(`article[data-qid="${q}"] input[type="radio"]:checked`);
+        if (sel) n++;
+      });
+      return n;
+    }
+
+    function updateProgress(){
+      const total = Object.keys(answerKey).length;
+      const done = getAnsweredCount();
+      const pct = Math.round((done/total)*100);
+      bar.style.width = pct + '%';
+      scoreBox.textContent = `已作答 ${done}/${total} 題`;
+    }
+
+    quiz.addEventListener('change', e=>{
+      if(e.target.matches('input[type="radio"]')) updateProgress();
+    });
+
+    function clearMarks(){
+      quiz.querySelectorAll('.opt').forEach(el=>{
+        el.classList.remove('correct','wrong');
+      });
+    }
+
+    function grade(showCorrect=false){
+      const total = Object.keys(answerKey).length;
+      let correct = 0;
+
+      clearMarks();
+
+      Object.entries(answerKey).forEach(([qid, ansIdx])=>{
+        const qEl = quiz.querySelector(`article[data-qid="${qid}"]`);
+        const opts = [...qEl.querySelectorAll('input[type="radio"]')];
+        const chosen = qEl.querySelector('input[type="radio"]:checked');
+
+        // 標示正解
+        if (showCorrect && opts[ansIdx]) {
+          opts[ansIdx].closest('.opt').classList.add('correct');
+        }
+
+        if (chosen){
+          const idx = Number(chosen.value);
+          if (idx === ansIdx){
+            correct++;
+            chosen.closest('.opt').classList.add('correct');
+          }else{
+            chosen.closest('.opt').classList.add('wrong');
+          }
+        }
+      });
+
+      const pct = Math.round((correct/total)*100);
+      scoreBox.innerHTML = `分數：<b>${correct}</b> / ${total}（${pct}%）` +
+        (correct===total ? ' ✅ 太棒了，全對！' : (pct>=80 ? ' 👍 表現不錯！' : ' 📚 再加油～'));
+    }
+
+    document.getElementById('gradeBtn').addEventListener('click', ()=>grade(false));
+    document.getElementById('showAnsBtn').addEventListener('click', ()=>grade(true));
+    document.getElementById('clearBtn').addEventListener('click', ()=>{
+      quiz.querySelectorAll('input[type="radio"]').forEach(i=>i.checked=false);
+      clearMarks();
+      scoreBox.textContent = '已清除作答，請重新作答';
+      bar.style.width = '0%';
+    });
+
+    // 初始
+    updateProgress();
+  </script>
+</body>
+</html>
