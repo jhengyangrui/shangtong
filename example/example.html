@@ -52,22 +52,44 @@
     .btn.primary{ background:var(--accent); color:#071018; border-color:transparent }
     main{ padding:24px 0 56px }
     .grid{
-      display:grid; gap:18px;
-      grid-template-columns: repeat(1, minmax(0,1fr));
+      display: flex; /* 使用 Flexbox */
+      justify-content: center; /* 水平置中 */
+      gap: 18px; /* 卡片之間的間距 */
+      flex-wrap: wrap; /* 如果空間不足，讓卡片換行 */
     }
     @media (min-width:640px){ .grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
     @media (min-width:1024px){ .grid{ grid-template-columns: repeat(3, minmax(0,1fr)); } }
 
-    .card{
-      background:var(--card); border:1px solid var(--ring); border-radius:var(--radius);
-      overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column; min-height:100%;
-      transition:.25s transform, .25s box-shadow;
+    .card {
+      width: 400px; /* 固定卡片寬度 */
+      background: var(--card);
+      border: 1px solid var(--ring);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: 0.25s transform, 0.25s box-shadow;
     }
-    .card:hover{ transform:translateY(-2px) }
-    .media{
-      position:relative; aspect-ratio:16/9; background:#0d1322; overflow:hidden;
+
+    .card:hover {
+      transform: translateY(-2px);
     }
-    .media img{ width:100%; height:100%; object-fit:cover; display:block }
+
+    .media {
+      position: relative;
+      aspect-ratio: 7/7; /* Increase the height of the photo box */
+      background: #0d1322;
+      overflow: hidden;
+    }
+
+    .media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
     .play{
       position:absolute; inset:auto 12px 12px auto; display:inline-flex; align-items:center; gap:8px;
       background:rgba(0,0,0,.5); color:#fff; border:1px solid rgba(255,255,255,.2);
@@ -119,11 +141,6 @@
   <header>
     <div class="wrap">
       <h1>成功案例介紹</h1>
-      <p class="lead">展示我們在不同產業的落地成果：包含圖片、影片與重點說明。</p>
-      <div class="toolbar">
-        <button class="btn primary" id="toggleTheme">切換主題</button>
-        <button class="btn" onclick="scrollToGrid()">快速瀏覽案例</button>
-      </div>
     </div>
   </header>
 
@@ -134,80 +151,31 @@
       <article class="card">
         <div class="media">
           <!-- 將 src 換成你的圖片路徑，例如 images/case-a.jpg -->
-          <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1600&auto=format&fit=crop" alt="案例A 封面圖">
+          <img src="S__103653382_0.jpg" alt="案例A 封面圖">
         </div>
         <div class="content">
-          <h3 class="title">案例 A｜電商成長計畫</h3>
-          <div class="meta">
-            <span class="tag">電商</span><span class="tag">成長</span><span class="tag">轉換率</span>
-          </div>
-          <p class="desc">針對品類頁與結帳流程進行 UX/效能優化，導入自動化推薦與 A/B 測試，三個月達到轉換率 +32%、客單價 +12%。</p>
+          <h3 class="title">墨西哥🇲🇽One o one</h3>
         </div>
-        <div class="footer">
-          <a class="link" href="#" onclick="openModal({type:'youtube', title:'案例 A 精華影片', src:'https://www.youtube.com/embed/dQw4w9WgXcQ'})">觀看精華影片</a>
-          <div class="thumbs" title="客戶滿意度">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4 8.24 4 9.91 4.81 11 6.08 12.09 4.81 13.76 4 15.5 4 18 4 20 6 20 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            4.8/5
-          </div>
-        </div>
+
       </article>
 
       <!-- 案例 B：影片按鈕（YouTube） -->
       <article class="card">
         <div class="media">
-          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop" alt="案例B 封面圖">
-          <div class="play" role="button" tabindex="0"
-               onclick="openModal({type:'youtube', title:'案例 B 專案紀錄', src:'https://www.youtube.com/embed/ysz5S6PUM-U'})">
-            <!-- play icon -->
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-            觀看影片
-          </div>
+          <!-- 將 src 換成你的圖片路徑，例如 images/case-a.jpg -->
+          <img src="S__103653386.jpg" alt="案例A 封面圖">
         </div>
         <div class="content">
-          <h3 class="title">案例 B｜製造業數據戰情室</h3>
-          <div class="meta">
-            <span class="tag">製造</span><span class="tag">可視化</span><span class="tag">即時監控</span>
-          </div>
-          <p class="desc">整合 MES/ERP 與產線感測數據，建立即時看板與預警機制，良率下滑可在 5 分鐘內通知到位，平均停機時間 -18%。</p>
+          <h3 class="title">盧森堡🇱🇺Guo Cha club</h3>
         </div>
-        <div class="footer">
-          <a class="link" href="#" onclick="openModal({type:'youtube', title:'案例 B 專案紀錄', src:'https://www.youtube.com/embed/ysz5S6PUM-U'})">在頁面中播放</a>
-          <a class="link" href="https://www.youtube.com/watch?v=ysz5S6PUM-U" target="_blank" rel="noopener">前往 YouTube</a>
-        </div>
+
       </article>
 
-      <!-- 案例 C：本機 mp4 影片示範 -->
-      <article class="card">
-        <div class="media">
-          <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1600&auto=format&fit=crop" alt="案例C 封面圖">
-          <div class="play" role="button" tabindex="0"
-               onclick="openModal({type:'video', title:'案例 C 成果 Demo', src:'media/demo.mp4', poster:'media/demo-poster.jpg'})">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-            播放本機影片
-          </div>
-        </div>
-        <div class="content">
-          <h3 class="title">案例 C｜門市營運優化</h3>
-          <div class="meta">
-            <span class="tag">零售</span><span class="tag">POS 整合</span><span class="tag">會員成長</span>
-          </div>
-          <p class="desc">重構會員/券卷/點數模組與 POS 整合；導入 RFM 受眾分群與自動化推播，半年內會員數 +45%、回購率 +21%。</p>
-        </div>
-        <div class="footer">
-          <span class="thumbs">🌟 精選案例</span>
-          <a class="link" href="#" onclick="openModal({type:'video', title:'案例 C 成果 Demo', src:'media/demo.mp4', poster:'media/demo-poster.jpg'})">在頁面中播放</a>
-        </div>
-      </article>
+      
 
     </section>
 
-    <div class="notice">
-      ✅ 使用方式：<br>
-      1) 將圖片 <code>&lt;img src="..."&gt;</code> 改為你的路徑（例如 <code>images/case-1.jpg</code>）。<br>
-      2) YouTube 影片：把 <code>openModal({ type:'youtube', src:'https://www.youtube.com/embed/…' })</code> 的網址換成你的影片 Embed 連結。<br>
-      3) 本機 mp4：把 <code>media/demo.mp4</code> 換成你的檔案，必要時加上 <code>poster</code> 預覽圖。<br>
-      4) 複製卡片 <code>&lt;article class="card"&gt;…&lt;/article&gt;</code> 區塊即可新增更多案例。
-    </div>
+
   </main>
 
   <!-- Modal -->
@@ -254,52 +222,68 @@
     const modalTitle = document.getElementById('modalTitle');
 
     function openModal(options){
-      const { type='youtube', title='播放中', src='', poster='' } = options || {};
+      const { type='youtube', title='播放中', src='', poster='' } = options;
       modalTitle.textContent = title;
-
-      // 清空舊內容
-      modalBody.innerHTML = '';
+      modalBody.innerHTML = ''; // 清空內容
 
       if(type === 'youtube'){
+        // 嵌入 YouTube 影片
         const iframe = document.createElement('iframe');
-        iframe.src = src.includes('autoplay=1') ? src : (src + (src.includes('?') ? '&' : '?') + 'autoplay=1');
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-        iframe.allowFullscreen = true;
+        iframe.src = src;
+        iframe.setAttribute('allowfullscreen', '');
         modalBody.appendChild(iframe);
-      }else if(type === 'video'){
+      }else{
+        // 播放本機 mp4 影片
         const video = document.createElement('video');
         video.src = src;
         video.controls = true;
         video.autoplay = true;
-        if(poster) video.poster = poster;
         modalBody.appendChild(video);
       }
 
       modal.classList.add('open');
-      modal.setAttribute('aria-hidden','false');
-
-      // Esc 關閉
-      document.addEventListener('keydown', onEsc);
-      // 點背景關閉
-      modal.addEventListener('click', onBackdrop);
     }
 
     function closeModal(){
       modal.classList.remove('open');
-      modal.setAttribute('aria-hidden','true');
-      // 停止影片
-      modalBody.innerHTML = '';
-      document.removeEventListener('keydown', onEsc);
-      modal.removeEventListener('click', onBackdrop);
+      modalBody.innerHTML = ''; // 關閉時清空內容
     }
-    function onEsc(e){ if(e.key === 'Escape') closeModal(); }
-    function onBackdrop(e){ if(e.target === modal) closeModal(); }
 
-    // 無障礙：提供鍵盤啟動 .play
-    document.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter' && document.activeElement && document.activeElement.classList.contains('play')){
-        document.activeElement.click();
+    // 偵測圖片載入完成
+    document.querySelectorAll('img').forEach(img => {
+      img.onload = img.decode = () => img.parentElement.classList.remove('loading');
+      if(img.complete) img.onload();
+    });
+
+    // 偵測視窗滾動，顯示/隱藏回到頂部按鈕
+    const backToTopBtn = document.getElementById('backToTop');
+    const toggleBtn = document.getElementById('toggleTheme');
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      // 當前滾動位置
+      const scrollY = window.scrollY;
+
+      // 顯示或隱藏「回到頂部」按鈕
+      if(scrollY > 300){
+        backToTopBtn.classList.remove('hidden');
+      }else{
+        backToTopBtn.classList.add('hidden');
       }
+
+      // 隱藏主題切換按鈕（避免與「回到頂部」按鈕重疊）
+      if(scrollY > lastScrollY){
+        // 向下滾動
+        toggleBtn.classList.add('hidden');
+      }else{
+        // 向上滾動
+        toggleBtn.classList.remove('hidden');
+      }
+      lastScrollY = scrollY;
+    });
+
+    // 點擊「回到頂部」按鈕時平滑滾動到頁面頂部
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   </script>
 </body>
