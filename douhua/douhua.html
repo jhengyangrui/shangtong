@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>豆花產品製程｜單頁版</title>
+  <style>
+    :root{
+      --bg:#fafafa;--card:#ffffff;--ink:#1f2937;--muted:#6b7280;--accent:#10b981;--ring:#e5e7eb;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans TC",sans-serif;line-height:1.6;color:var(--ink);background:var(--bg)}
+    header{position:sticky;top:0;z-index:10;background:rgba(250,250,250,.9);backdrop-filter:saturate(180%) blur(6px);border-bottom:1px solid var(--ring)}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px 20px}
+    h1{margin:0 0 6px;font-size:clamp(22px,3.4vw,32px)}
+    .subtitle{color:var(--muted);font-size:14px}
+    .toolbar{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+    input[type="search"]{flex:1;min-width:220px;padding:10px 12px;border:1px solid var(--ring);border-radius:10px}
+    button{padding:10px 14px;border:1px solid var(--ring);background:var(--card);border-radius:10px;cursor:pointer}
+    button:hover{border-color:#cbd5e1}
+
+    .layout{display:grid;grid-template-columns:280px 1fr;gap:18px;max-width:1100px;margin:14px auto;padding:0 20px}
+    @media (max-width: 880px){.layout{grid-template-columns:1fr}}
+
+    nav{position:sticky;top:84px;align-self:start;background:var(--card);border:1px solid var(--ring);border-radius:14px;padding:12px}
+    .toc-title{font-weight:600;margin:6px 8px 10px}
+    .toc{list-style:none;margin:0;padding:0;max-height:70vh;overflow:auto}
+    .toc li{margin:.5rem 0}
+    .toc a{display:block;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--ink)}
+    .toc a:hover{background:#f3f4f6}
+
+    main{display:grid;gap:14px}
+    article{background:var(--card);border:1px solid var(--ring);border-radius:16px;padding:16px}
+    article h2{margin:0 0 8px}
+    .meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:14px}
+    .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+    @media (max-width:720px){.grid{grid-template-columns:1fr}}
+    .section-title{font-weight:700;margin:.5rem 0}
+    .ingredients{border:1px dashed var(--ring);border-radius:12px;padding:10px 12px;background:#fbfbfb}
+    .steps{white-space:pre-line}
+    .media{display:grid;gap:10px}
+    .media .ph{display:grid;place-items:center;border:1px dashed var(--ring);border-radius:12px;padding:16px;color:var(--muted);min-height:140px}
+    footer{max-width:1100px;margin:26px auto 60px;padding:0 20px;color:var(--muted);font-size:13px}
+    .backtop{position:fixed;right:18px;bottom:18px;background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:999px;box-shadow:0 6px 16px rgba(0,0,0,.12);}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>豆花產品製程</h1>
+      <div class="subtitle">依文件整理｜含目錄、搜尋、列印</div>
+      <div class="toolbar">
+        <input id="q" type="search" placeholder="快速搜尋：名稱或材料…（例如：芋圓 / 仙草 / 粉粿）」 " />
+        <button id="printBtn" title="列印此頁">列印</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav aria-label="目錄">
+      <div class="toc-title">目錄</div>
+      <ul id="toc" class="toc"></ul>
+    </nav>
+
+    <main id="recipes" aria-live="polite"></main>
+  </div>
+
+  <button class="backtop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="回到頂部">↑</button>
+
+  <footer>
+    <p>提示：點目錄可快速跳轉；上方搜尋可用名稱或材料過濾；列印會自動最佳化版面。</p>
+    <p>圖片／影片：每道項目預留位置，將檔案連結填入 image / video 欄位即可。</p>
+  </footer>
+
+  <button class="btn" type="button" onclick="history.back()" style="margin:18px;background:linear-gradient(90deg,#818cf8 0%,#f472b6 100%);">
+    ← 回到上一頁
+  </button>
+
+  <script>
+  // ——— 依《產品製程-豆花》文件整理的資料 ———
+  const DATA = [
+    // 器具
+    {
+      id: "tools",
+      name: "手工豆花（器具）",
+      category: "器具",
+      ingredients: [
+        "溫度計", "冷水壺（4公升量杯）", "高鍋（煮豆漿用）", "豆花杓", "隔熱鐵架",
+        "打蛋盆（料理盆）", "過濾袋", "脫渣磨豆機", "豆漿濃度計", "豆花桶",
+        "豆漿杓（攪拌用）", "計時器", "電子磅秤", "過濾網（濾黃豆用）"
+      ],
+      steps: "準備以上器具，供後續各製程使用。",
+      image: "", video: ""
+    },
+
+    // 製程：手工豆花
+    {
+      id: "douhua-process",
+      name: "手工豆花製作",
+      category: "製程",
+      ingredients: [
+        "無糖豆漿 3000ml", "嫩豆花粉 75g", "冷水 250ml"
+      ],
+      steps:
+`1. 豆漿煮沸後。
+2. 降溫至 95°C。
+3. 將豆花粉與冷水拌勻。
+4. 將拌勻之豆花混合液倒入盆中。
+5. 迅速將熱豆漿定點倒入調理盆中，放涼凝固即可。`,
+      image: "", video: ""
+    },
+
+    // 製程：芋圓
+    {
+      id: "taro-balls",
+      name: "芋圓製作",
+      category: "製程",
+      ingredients: [
+        "熟芋頭 300g（泥230g、絲70g）",
+        "糊化漿 86g（上統糊化粉1：7水，參考值）",
+        "上統芋圓預拌粉 120g",
+        "蔗糖：1:10 還原成糖水"
+      ],
+      steps:
+`1. 芋頭去皮切塊蒸約30分鐘；芋頭絲蒸約10分鐘，冷卻備用。
+2. 糊化漿：將糊化粉與水加熱至透明狀，冷卻備用。
+3. 熟芋泥 + 糊化漿 + 預拌粉搓揉成糰，再加入芋頭絲揉勻；太乾加糊化漿、太濕加糊化粉調整。
+4. 分割搓長條，切成適當大小成生芋圓。
+5. 水滾後下芋圓，中火煮至浮起，轉中小火計時約3分鐘撈出；以冷飲用水稍冷卻、瀝乾後拌少許蔗糖防沾黏。`,
+      image: "", video: ""
+    },
+
+    // 製程：手工金包銀
+    {
+      id: "jinbaoyin",
+      name: "手工金包銀",
+      category: "製程",
+      ingredients: [
+        "（餡）熟芋頭 100g", "（餡）二砂糖 10g", "（皮）手工地瓜圓 250g",
+        "重量：皮約8g／餡約2g／總重約10g"
+      ],
+      steps:
+`1. 餡：熟芋泥 + 二砂糖拌均勻後分裝秤重（可冷凍備用）。
+2. 包餡成形（皮8g、餡2g）。
+3. 水滾後下金包銀，中火煮至浮起，轉中小火計時約3分鐘撈出；以冷飲用水稍冷卻，拌少許果糖防沾黏。`,
+      image: "", video: ""
+    },
+
+    // 製程：粉粿／凍類
+    {
+      id: "plain-fengui",
+      name: "原味粉粿（無色）",
+      category: "製程",
+      ingredients: [
+        "上統傳原味粿粉 185g","沙拉油 4g","熱水 250cc","冷水 250cc","風味果汁（調色）80cc"
+      ],
+      steps:
+`1. 將 250cc 水煮滾熄火備用。
+2. 粉水：原味粉粿粉 185g + 冷水 250cc + 果汁 80cc，過濾 3 次。
+3. 分次倒入熱水 250cc 中，用打蛋器不停攪拌至糊狀，加入沙拉油拌勻成漿。
+4. 倒入深方盤（約 29×22.5×5cm），大火蒸約 30 分至透明Q狀，倒掉上層水、放涼冷藏。
+5. 隔日口感更佳；切塊時刀具需沾水防沾黏。`,
+      image: "", video: ""
+    },
+    {
+      id: "grass-jelly-soft",
+      name: "嫩仙草凍",
+      category: "製程",
+      ingredients: [
+        "仙草汁 150g","熱水 500–600cc","二砂糖 60g","冷水 30cc","上統芡粉 8g"
+      ],
+      steps:
+`1. 500cc 水（或 600cc）+ 仙草汁煮滾；保持加熱。
+2. 將芡粉 8g + 冷水 30cc 調成粉水，慢慢倒入並攪拌至沸，再加二砂糖攪拌溶解。
+3. 熄火過濾。隔冰水或冷藏至凝固即成。`,
+      image: "", video: ""
+    },
+    {
+      id: "jelly-base",
+      name: "果凍基底（特調）",
+      category: "製程",
+      ingredients: [
+        "特調果凍粉 50g","熱水 500cc","果汁 55cc"
+      ],
+      steps:
+`1. 水煮滾後加入果凍粉，攪拌至沸溶解熄火。
+2. 倒入果汁拌勻，冷卻後冷藏。`,
+      image: "", video: ""
+    },
+    { id:"almond-jelly", name:"杏仁凍", category:"製程",
+      ingredients:["杏仁凍粉 100g","熱水 500cc"],
+      steps:`水煮滾後加入杏仁凍粉，攪拌煮沸溶解、熄火，倒入模具冷卻後冷藏。`,
+      image:"", video:""
+    },
+    { id:"aiyu-jelly", name:"愛玉凍", category:"製程",
+      ingredients:["愛玉凍粉 100g","熱水 500cc"],
+      steps:`同上：煮沸溶解→熄火→入模→冷卻→冷藏。`,
+      image:"", video:""
+    },
+    {
+      id:"brown-sugar-fengui",
+      name:"黑糖粉粿",
+      category:"製程",
+      ingredients:["上統黑糖Q粿粉 250g","沙拉油 4g","熱水 250cc","冷水 250cc"],
+      steps:
+`1. 煮滾 250cc 水熄火。
+2. 黑糖Q粿粉 + 冷水 250cc 過濾 3 次，分次倒入熱水 250cc 中攪拌成糊，加入沙拉油拌勻。
+3. 入深方盤，大火蒸約 30 分至透明Q狀，倒上層水、放涼冷藏。
+4. 隔日口感更佳；切塊刀具需沾水。`,
+      image:"", video:""
+    },
+    { id:"green-tea-jelly", name:"綠茶凍", category:"製程",
+      ingredients:["綠茶凍粉 100g","熱水 500cc"],
+      steps:`水煮滾→加入粉攪拌煮沸→熄火倒入模→冷卻冷藏。`,
+      image:"", video:""
+    },
+    { id:"coffee-jelly", name:"咖啡凍", category:"製程",
+      ingredients:["咖啡凍粉 100g","熱水 500cc"],
+      steps:`流程同上。`,
+      image:"", video:""
+    },
+    { id:"panna-cotta", name:"奶酪", category:"製程",
+      ingredients:["奶酪粉 100g","熱水 500cc"],
+      steps:`水煮滾→加入奶酪粉煮沸溶解→熄火→入模→冷藏。`,
+      image:"", video:""
+    },
+    { id:"tea-panna-cotta", name:"茶奶酪", category:"製程",
+      ingredients:["奶酪粉 100g","紅茶 500cc"],
+      steps:`以紅茶煮滾→加入奶酪粉煮沸溶解→熄火→入模→冷藏。`,
+      image:"", video:""
+    },
+
+    // 布丁（多口味，做法相同）
+    { id:"egg-pudding", name:"雞蛋布丁", category:"製程",
+      ingredients:["雞蛋布丁粉 100g","熱水 1000cc","蔗糖 20cc"],
+      steps:`熱水煮滾→加入布丁粉煮沸溶解→熄火→加入蔗糖 20cc 拌勻→入模冷藏。`,
+      image:"", video:""
+    },
+    { id:"taro-pudding", name:"芋頭布丁", category:"製程",
+      ingredients:["芋頭布丁粉 100g","熱水 1000cc","蔗糖 20cc"],
+      steps:`同上流程。`, image:"", video:""
+    },
+    { id:"strawberry-pudding", name:"草莓布丁", category:"製程",
+      ingredients:["草莓布丁粉 100g","熱水 1000cc","蔗糖 20cc"],
+      steps:`同上流程。`, image:"", video:""
+    },
+    { id:"milk-pudding", name:"鮮奶布丁", category:"製程",
+      ingredients:["鮮奶布丁粉 100g","熱水 1000cc","蔗糖 20cc"],
+      steps:`同上流程。`, image:"", video:""
+    },
+    { id:"choco-pudding", name:"巧克力布丁", category:"製程",
+      ingredients:["巧克力布丁粉 100g","熱水 1000cc","蔗糖 20cc"],
+      steps:`同上流程。`, image:"", video:""
+    },
+    { id:"mango-pudding", name:"芒果布丁", category:"製程",
+      ingredients:["芒果布丁粉 100g","熱水 1000cc","蔗糖 20cc"],
+      steps:`同上流程。`, image:"", video:""
+    },
+    { id:"black-tea-jelly", name:"紅茶凍", category:"製程",
+      ingredients:["紅茶凍粉 100g","熱水 500cc"],
+      steps:`水煮滾→加粉煮沸溶解→熄火→入模→冷藏。`,
+      image:"", video:""
+    },
+    { id:"yellow-fengui", name:"傳統粉粿（黃色）", category:"製程",
+      ingredients:["上統傳統粉粿粉 185g","沙拉油 4g","熱水 250cc","冷水 250cc"],
+      steps:`作法同原味粉粿（無色）。`,
+      image:"", video:""
+    },
+
+    // 成品組合（豆花碗搭配）
+    { id:"douhua-milk", name:"豆漿豆花", category:"成品組合",
+      ingredients:["豆花","豆漿","碎冰","糖水"],
+      steps:`1. 取豆花碗→2. 加入豆花→3. 加入豆漿→4. 加入碎冰→5. 淋糖水。`,
+      image:"豆漿豆花.jpg", video:""
+    },
+    { id:"douhua-milktea", name:"奶茶豆花", category:"成品組合",
+      ingredients:["豆花","無糖奶茶","碎冰","糖水"],
+      steps:`同上（以奶茶替豆漿）。`,
+      image:"奶茶豆花.jpg", video:""
+    },
+    { id:"douhua-ginger", name:"薑汁豆花", category:"成品組合",
+      ingredients:["豆花","薑汁","碎冰","糖水"],
+      steps:`同上（以薑汁替豆漿）。`,
+      image:"薑汁豆花.jpg", video:""
+    },
+    { id:"douhua-fengui", name:"粉粿豆花", category:"成品組合",
+      ingredients:["豆花","粉粿","碎冰","糖水"],
+      steps:`同上（加入粉粿）。`,
+      image:"粉粿豆花.jpg", video:""
+    },
+    { id:"douhua-grass", name:"仙草豆花", category:"成品組合",
+      ingredients:["豆花","仙草","碎冰","糖水"],
+      steps:`同上（加入仙草）。`,
+      image:"仙草豆花.jpg", video:""
+    },
+    { id:"douhua-azuki", name:"紅豆豆花", category:"成品組合",
+      ingredients:["豆花","紅豆粒","碎冰","糖水"],
+      steps:`同上（加入紅豆粒）。`,
+      image:"紅豆豆花.jpg", video:""
+    },
+    { id:"douhua-boba-peanut", name:"粉圓花生豆花", category:"成品組合",
+      ingredients:["豆花","軟花生","粉圓","碎冰","糖水"],
+      steps:`同上（加入軟花生與粉圓）。`,
+      image:"粉圓花生豆花.jpg", video:""
+    },
+    { id:"douhua-boba", name:"粉圓豆花", category:"成品組合",
+      ingredients:["豆花","粉圓","碎冰","糖水"],
+      steps:`同上（加入粉圓）。`,
+      image:"粉圓豆花.jpg", video:""
+    },
+    { id:"douhua-peanut", name:"花生豆花", category:"成品組合",
+      ingredients:["豆花","軟花生","碎冰","糖水"],
+      steps:`同上（加入軟花生）。`,
+      image:"", video:""
+    },
+    { id:"douhua-taro-sweetpotato", name:"芋圓地瓜圓豆花", category:"成品組合",
+      ingredients:["豆花","芋圓地瓜圓","碎冰","糖水"],
+      steps:`同上（加入芋圓地瓜圓）。`,
+      image:"", video:""
+    },
+    { id:"douhua-three-treasures", name:"三寶豆花", category:"成品組合",
+      ingredients:["豆花","綠豆","花生","花豆","碎冰","糖水"],
+      steps:`依序加入綠豆→花生→花豆→碎冰→糖水。`,
+      image:"", video:""
+    },
+    { id:"douhua-juice", name:"果汁豆花", category:"成品組合",
+      ingredients:["豆花","風味果汁","碎冰"],
+      steps:`豆花→果汁→碎冰。`,
+      image:"", video:""
+    },
+    { id:"douhua-almond", name:"杏仁豆花", category:"成品組合",
+      ingredients:["豆花","杏仁凍","碎冰","糖水"],
+      steps:`豆花→杏仁凍→碎冰→糖水。`,
+      image:"", video:""
+    },
+    { id:"douhua-3pudding", name:"三色布丁豆花", category:"成品組合",
+      ingredients:["豆花","雞蛋布丁","芋頭布丁","草莓布丁","碎冰","糖水"],
+      steps:`豆花→三款布丁→碎冰→糖水。`,
+      image:"", video:""
+    },
+
+    // 糖水
+    { id:"hot-brown-sugar-water", name:"熱黑糖水", category:"糖水",
+      ingredients:["黑糖蜜 100cc","熱水 500cc"],
+      steps:`黑糖蜜加熱水煮滾後保溫即可。`,
+      image:"", video:""
+    },
+    { id:"iced-brown-sugar-water", name:"冰黑糖水", category:"糖水",
+      ingredients:["黑糖蜜 100cc","冰水 500cc"],
+      steps:`黑糖蜜加冰水拌勻即可。`,
+      image:"", video:""
+    },
+    { id:"special-syrup-water", name:"特調糖水", category:"糖水",
+      ingredients:["黑糖蜜 50cc","特調糖漿 50cc","冰水 500cc"],
+      steps:`黑糖蜜 + 特調糖漿 + 冰水拌勻，即為豆花糖水用。`,
+      image:"", video:""
+    }
+  ];
+
+  // ——— 產生目錄與卡片 ———
+  const toc = document.getElementById('toc');
+  const container = document.getElementById('recipes');
+
+  function createRecipeCard(r){
+    const art = document.createElement('article');
+    art.id = r.id;
+    art.dataset.name = r.name;
+    art.dataset.ingredients = (r.ingredients||[]).join(' ');
+
+    const h2 = document.createElement('h2');
+    h2.textContent = r.name;
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.innerHTML = `<span>類別：${r.category||'—'}</span>`;
+
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+
+    // 左：步驟與材料
+    const left = document.createElement('div');
+    const st = document.createElement('div');
+    st.className='section-title'; st.textContent='步驟';
+    const steps = document.createElement('div');
+    steps.className='steps'; steps.textContent = r.steps||'—';
+
+    const it = document.createElement('div');
+    it.className='section-title'; it.textContent='材料';
+    const ul = document.createElement('ul');
+    ul.className='ingredients';
+    (r.ingredients||[]).forEach(x=>{const li=document.createElement('li'); li.textContent=x; ul.appendChild(li)});
+
+    left.append(st, steps, it, ul);
+
+    // 右：媒體
+    const right = document.createElement('div');
+    right.className='media';
+
+    const imgBox = document.createElement('div');
+    if(r.image){
+      const img = document.createElement('img');
+      img.alt = r.name + ' 成品照';
+      img.src = r.image;
+      img.style.width='100%'; img.style.borderRadius='12px';
+      imgBox.appendChild(img);
+    }else{
+      imgBox.className='ph';
+      imgBox.textContent='成品照（填入 image 連結）';
+    }
+
+    const videoBox = document.createElement('div');
+    if(r.video){
+      const v = document.createElement('video'); v.controls=true; v.src=r.video; v.style.width='100%'; v.style.borderRadius='12px';
+      videoBox.appendChild(v);
+    }else{
+      videoBox.className='ph';
+      videoBox.textContent='教學影片（填入 video 連結）';
+    }
+
+    right.append(imgBox, videoBox);
+    grid.append(left,right);
+
+    art.append(h2, meta, grid);
+    return art;
+  }
+
+  function render(){
+    // 目錄
+    toc.innerHTML = '';
+    DATA.forEach(r=>{
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + r.id; a.textContent = r.name; a.setAttribute('aria-label', '前往 ' + r.name);
+      li.appendChild(a); toc.appendChild(li);
+    });
+
+    // 內容
+    container.innerHTML = '';
+    DATA.forEach(r=> container.appendChild(createRecipeCard(r)));
+  }
+  render();
+
+  // 搜尋（名稱或材料）
+  const q = document.getElementById('q');
+  q.addEventListener('input', e => {
+    const kw = e.target.value.trim();
+    const cards = [...container.querySelectorAll('article')];
+    if(!kw){cards.forEach(c=>c.classList.remove('hidden'));return}
+    const key = kw.toLowerCase();
+    cards.forEach(c=>{
+      const hay = (c.dataset.name + ' ' + c.dataset.ingredients).toLowerCase();
+      c.classList.toggle('hidden', !hay.includes(key));
+    });
+  });
+
+  // 列印
+  document.getElementById('printBtn').addEventListener('click', ()=>window.print());
+  </script>
+</body>
+</html>
