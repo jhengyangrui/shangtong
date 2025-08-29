@@ -444,37 +444,167 @@
         <section class="panel active" id="panel-1" role="tabpanel" aria-labelledby="tab-1">
           <div class="grid">
             <div>
-              <label for="date">試喝日期</label>
+              <label for="date">填表日期</label>
               <input id="date" type="date" required />
             </div>
             <div>
-              <label for="name">試喝者姓名</label>
+              <label for="name">姓名</label>
               <input id="name" type="text" placeholder="王小明" required />
             </div>
             <div>
-              <label for="drink">試喝飲品名稱</label>
-              <input id="drink" type="text" placeholder="請輸入飲品名稱" required />
+              <label>性別</label>
+              <div class="radio-group">
+                <label><input type="radio" name="gender" value="男" required /> 男</label>
+                <label><input type="radio" name="gender" value="女" required /> 女</label>
+              </div>
             </div>
             <div>
-              <label for="rating">試喝評分（1-5 分）</label>
-              <select id="rating" required>
-                <option value="" disabled selected>請選擇評分</option>
-                <option value="1">1 - 很差</option>
-                <option value="2">2 - 不滿意</option>
-                <option value="3">3 - 普通</option>
-                <option value="4">4 - 滿意</option>
-                <option value="5">5 - 非常滿意</option>
-              </select>
+              <label for="address">住址</label>
+              <input id="address" type="text" placeholder="完整住址（含郵遞區號）" required />
             </div>
-            <div style="grid-column: span 2;">
-              <label for="comments">試喝意見</label>
-              <textarea id="comments" rows="4" placeholder="請輸入您的意見或建議"></textarea>
+            <div>
+              <label for="course">課程預約</label>
+              <input id="course" type="text" placeholder="請輸入想上的課程名稱" />
+            </div>
+            <div>
+              <label for="tel">電話</label>
+              <input id="tel" type="tel" placeholder="(02)1234-5678" />
+            </div>
+            <div>
+              <label for="mobile">行動電話</label>
+              <input id="mobile" type="tel" placeholder="0912-345-678" />
+            </div>
+            <div>
+              <label for="messenger">通訊軟體</label>
+              <input id="messenger" type="text" placeholder="LINE / WeChat / IG..." />
+            </div>
+            <div>
+              <label for="email">Email</label>
+              <input id="email" type="email" placeholder="you@example.com" required />
+            </div>
+
+            <div style="grid-column: span 2">
+              <label>自營店鋪內容（可複選）</label>
+              <div class="shop-options">
+                <label><input type="checkbox" name="shop" value="茶飲店" /> 茶飲店</label>
+                <label><input type="checkbox" name="shop" value="冰品店" /> 冰品店</label>
+                <label><input type="checkbox" name="shop" value="複合式簡餐" /> 蘭合式簡餐</label>
+                <label><input type="checkbox" name="shop" value="咖啡店" /> 咖啡店</label>
+                <label><input type="checkbox" name="shop" value="早餐店" /> 早餐店</label>
+                <label><input type="checkbox" name="shop" value="炸雞店" /> 炸雞店</label>
+                <label><input type="checkbox" name="shop" value="滷味店" /> 滷味店</label>
+                <label><input type="checkbox" name="shop" value="火鍋店" /> 火鍋店</label>
+                <label><input type="checkbox" name="shop" value="其他" /> 其他 <input type="text" class="shop-note" placeholder="請輸入店型名稱" /></label>
+                <label><input type="checkbox" name="shop" value="無相關經驗" /> 無相關經驗</label>
+              </div>
+            </div>
+
+            <div style="grid-column: span 2">
+              <label>希望經營方式（可複選）</label>
+              <div class="business-options">
+                <label><input type="checkbox" name="biz" value="行動式" /> 行動式</label>
+                <label><input type="checkbox" name="biz" value="店面式" /> 店面式</label>
+                <label><input type="checkbox" name="biz" value="原料批發" /> 原料批發</label>
+                <label class="other-biz"><input type="checkbox" name="biz" value="其他" /> 其他 <input type="text" class="biz-note" placeholder="請輸入方式" /></label>
+              </div>
+            </div>
+
+            <div style="grid-column: span 2">
+              <label>希望經營型態（可複選）</label>
+              <div class="type-options">
+                <label><input type="checkbox" name="type" value="外帶飲品" /> 外帶飲品</label>
+                <label><input type="checkbox" name="type" value="烘焙" /> 烘焙</label>
+                <label><input type="checkbox" name="type" value="咖啡店" /> 咖啡店</label>
+                <label><input type="checkbox" name="type" value="下午茶店" /> 下午茶店</label>
+                <label><input type="checkbox" name="type" value="早餐店" /> 早餐店</label>
+                <label><input type="checkbox" name="type" value="複合式餐廳" /> 複合式餐廳</label>
+                <label><input type="checkbox" name="type" value="百貨/賣場/超市" /> 百貨/賣場/超市</label>
+                <label><input type="checkbox" name="type" value="娛樂休閒" /> 娛樂休閒</label>
+                <label><input type="checkbox" name="type" value="飯店" /> 飯店</label>
+                <label><input type="checkbox" name="type" value="品牌代工" /> 品牌代工</label>
+                <label><input type="checkbox" name="type" value="教學/學校" /> 教學/學校</label>
+              </div>
+            </div>
+
+            <div style="grid-column: span 2">
+              <label>課程名稱（可複選）</label>
+              <div class="course-options">
+                <label><input type="checkbox" name="courseName" value="茶飲速成班" /> 茶飲速成班</label>
+                <label><input type="checkbox" name="courseName" value="手工甜品課" /> 手工甜品課</label>
+                <label><input type="checkbox" name="courseName" value="茶飲課程X天" /> 茶飲課程X天</label>
+                <label><input type="checkbox" name="courseName" value="綿密雪花冰課" /> 綿密雪花冰課</label>
+                <label><input type="checkbox" name="courseName" value="異國輕食課" /> 異國輕食課</label>
+                <label><input type="checkbox" name="courseName" value="手工咖啡課" /> 手工咖啡課</label>
+              </div>
+            </div>
+
+            <div style="grid-column: span 2">
+              <label>特定通路（可複選）</label>
+              <div class="channel-options">
+                <label><input type="checkbox" name="channel" value="盤商" /> 盤商</label>
+                <label><input type="checkbox" name="channel" value="零售" /> 零售</label>
+                <label><input type="checkbox" name="channel" value="批發" /> 批發</label>
+                <label><input type="checkbox" name="channel" value="代理商" /> 代理商</label>
+                <label><input type="checkbox" name="channel" value="經銷" /> 經銷</label>
+              </div>
+            </div>
+
+            <div style="grid-column: span 2">
+              <label>附近主要商圈（可複選）</label>
+              <div class="area-options">
+                <label><input type="checkbox" name="area" value="辦公大樓" /> 辦公大樓</label>
+                <label><input type="checkbox" name="area" value="夜市" /> 夜市</label>
+                <label><input type="checkbox" name="area" value="學校" /> 學校</label>
+                <label><input type="checkbox" name="area" value="住宅" /> 住宅</label>
+                <label class="other-area"><input type="checkbox" name="area" value="其他" /> 其他 <input type="text" class="area-note" placeholder="請輸入商圈名稱" /></label>
+              </div>
+            </div>
+
+            <div style="grid-column: span 2">
+              <label>訊息來源（可複選）</label>
+              <div class="source-options">
+                <label><input type="checkbox" name="source" value="DM" /> DM</label>
+                <label><input type="checkbox" name="source" value="親友介紹" /> 親友介紹</label>
+                <label><input type="checkbox" name="source" value="廣告/媒體" /> 廣告/媒體</label>
+                <label><input type="checkbox" name="source" value="網路搜尋" /> 網路搜尋</label>
+                <label><input type="checkbox" name="source" value="FB 粉絲團" /> FB 粉絲團</label>
+                <label><input type="checkbox" name="source" value="YouTube" /> YouTube</label>
+                <label><input type="checkbox" name="source" value="學員介紹" /> 學員介紹</label>
+                <label><input type="checkbox" name="source" value="店家/廠商介紹/展銷活動" /> 店家/廠商介紹(展銷活動)</label>
+                <label><input type="checkbox" name="source" value="奇麗灣珍奶文化館" /> 奇麗灣珍奶文化館</label>
+                <label class="other-source"><input type="checkbox" name="source" value="其他" /> 其他 <input type="text" class="source-note" placeholder="請輸入來源" /></label>
+              </div>
+            </div>
+
+            <div style="grid-column: span 2">
+              <label>客戶需求（可複選）</label>
+              <div class="demand-options">
+                <label><input type="checkbox" name="demand" value="茶葉" /> 茶葉</label>
+                <label><input type="checkbox" name="demand" value="糖漿" /> 糖漿</label>
+                <label><input type="checkbox" name="demand" value="果汁" /> 果汁</label>
+                <label><input type="checkbox" name="demand" value="淋醬/配料" /> 淋醬/配料</label>
+                <label><input type="checkbox" name="demand" value="果粉/奶精" /> 果粉/奶精</label>
+                <label><input type="checkbox" name="demand" value="珍珠" /> 珍珠</label>
+                <label><input type="checkbox" name="demand" value="咖啡豆" /> 咖啡豆</label>
+                <label><input type="checkbox" name="demand" value="器具/設備" /> 器具/設備</label>
+              </div>
+            </div>
+
+            <div style="grid-column: span 2">
+              <label for="location">開店地點</label>
+              <input id="location" type="text" placeholder="請輸入開店地點" />
+            </div>
+
+            <div style="grid-column: span 2">
+              <label for="interview">訪談內容</label>
+              <textarea id="interview" rows="6" placeholder="請輸入訪談內容…"></textarea>
             </div>
           </div>
 
           <div class="actions">
             <button class="btn" id="btnSave">暫存</button>
-            <button class="btn primary" id="btnDownloadJSON">下載 JSON</button>
+            <!-- <button class="btn" id="btnGoExternal">外部連結</button> -->
+            <button class="btn primary" id="btnSummit">summit</button>
           </div>
         </section>
 
@@ -569,14 +699,14 @@
 
     // ===== 綁定 Step 1 按鈕 =====
     document.getElementById('btnSave').addEventListener('click', () => {
-      const data = collectFormData();
+      const data = collect();
       localStorage.setItem(STORE_KEY, JSON.stringify(data));
       alert('已暫存到瀏覽器（localStorage）。');
     });
 
-    document.getElementById('btnDownloadJSON').addEventListener('click', () => {
-      const data = collectFormData();
-      downloadJSON(data, 'tea-tasting-form.json');
+    document.getElementById('btnSummit').addEventListener('click', () => {
+      const data = collect();
+      downloadJSON(data, 'stepper-data.json');
     });
 
     document.getElementById('btnGoExternal').addEventListener('click', () => go(1));
@@ -590,30 +720,6 @@
     document.getElementById('btnBack2').addEventListener('click', () => go(0));
     document.getElementById('btnBack3').addEventListener('click', () => go(0));
     document.getElementById('btnBack4').addEventListener('click', () => go(0));
-
-    // 收集表單資料
-    function collectFormData() {
-      return {
-        date: val('date'),
-        name: val('name'),
-        drink: val('drink'),
-        rating: val('rating'),
-        comments: val('comments'),
-      };
-    }
-
-    // 下載 JSON 檔案
-    function downloadJSON(obj, filename = 'data.json') {
-      const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    }
 
     // ===== Helpers =====
     function qs(sel) { return document.querySelector(sel); }
@@ -693,6 +799,15 @@
 
       setVal('location', data.location);
       setVal('interview', data.interview);
+    }
+
+    function downloadJSON(obj, filename='data.json') {
+      const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
     }
   </script>
 </body>
