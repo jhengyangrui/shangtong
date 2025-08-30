@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --line: #d1d5db;
+      --node: #f3f4f6;
+      --node-hover: #e5e7eb;
+      --ring: #e5e7eb;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans TC",sans-serif;
+      background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
+      color:#1f2937;
+    }
+    header{
+      position:fixed; inset:16px auto auto 16px; z-index:2; color:var(--muted); font-size:24px; line-height:1.3; user-select:none;
+      background:#ffffffcc; backdrop-filter:saturate(120%) blur(6px); border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px;
+    }
+    .stage{ width:min(92vmin, 980px); aspect-ratio:1/1; display:grid; place-items:center; position:relative;
+      filter: drop-shadow(0 18px 40px rgba(0,0,0,.45)); }
+    svg{ width:100%; height:100%; display:block }
+
+    .rings circle{ fill:none; stroke:var(--ring); stroke-width:1 }
+    .spoke{ stroke:var(--line); stroke-width:2; opacity:.9 }
+
+    .core circle {
+      fill:#ffffff; stroke:#1f2937; stroke-width:1.5; r:130;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.2)); transition:.2s ease;
+    }
+    .core:hover circle { transform:scale(1.03) }
+    .core text { fill:#1f2937; font-weight:700; letter-spacing:.06em; font-size:24px }
+
+    .node circle{
+      fill:var(--node); stroke:#263142; stroke-width:1.25; r:110; transition:.18s ease;
+    }
+    .node:hover circle{
+      fill:var(--node-hover); transform:translateY(-1px) scale(1.03); stroke:var(--accent);
+      filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.35));
+    }
+    /* 預設字級給個基準，實際會被 JS 覆蓋 */
+    .node text{ pointer-events:none; font-size:24px; font-weight:600 }
+    .node .hint{ font-size:24px; font-weight:500; fill:var(--muted) }
+
+    @media (max-width:520px){
+      .node text{ font-size:12px }
+      .node .hint{ font-size:10px }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stage" role="application" aria-label="放射狀導航">
+    <!-- 畫布放大，避免被邊界裁切 -->
+    <svg viewBox="-600 -600 1200 1200" xmlns="http://www.w3.org/2000/svg">
+      <g class="rings" aria-hidden="true">
+        <circle r="160"/><circle r="280"/><circle r="400"/>
+      </g>
+      <g id="spokes"></g>
+      <g id="nodes"></g>
+
+      <!-- 中央 -->
+      <g class="core" transform="translate(0,0)">
+        <circle r="72"></circle>
+        <text x="0" y="0" text-anchor="middle" dominant-baseline="middle" fill="var(--muted)" style="font-size:24px">千億市場</text>
+      </g>
+    </svg>
+  </div>
+
+  <script>
+    // === 可編輯的分支資料 ===
+    const items = [
+      { label: "設備", href: "tool/tool.html", color: "#d1fae5" }, // 設備背景改為淺綠色
+      { label: "原料", href: "teaintroduction.html", color: "#d1fae5" }, // 原料背景改為淺綠色
+      { label: "協助自創品牌", href: "example/example.html" },
+      { label: "創新研發", href: "", color: "#d1fae5" }, // 創新研發背景改為淺綠色
+      { label: "代客研發", href: "", color: "#d1fae5" }, // 代客研發背景改為淺綠色
+      { label: "創新流行店合作", href: "" },
+      { label: "品牌再造", href: "" },
+      { label: "動線規劃", href: "" },
+      { label: "店面設計", href: "" },
+      { label: "形象CI設計", href: "" },
+      { label: "選點建議", href: "" },
+      { label: "店的經營輔導", href: "" },
+      { label: "產品技術教學", href: "" },
+      { label: "協助菜單規劃", href: "" },
+    ];
+
+    // === 幾何參數 ===
+    const RADIUS = 450;          // 外圈中心到節點距離
+    const NODE_R = 90;           // 節點半徑（實際描邊用 110，但文字布局用這個控制即可）
+    const SPOKE_FROM = 140;      // 放射線起點
+    const ROTATE_OFFSET_DEG = -90;
+    const OPEN_IN_NEW_TAB = false;
+
+    const nodesG = document.getElementById('nodes');
+    const spokesG = document.getElementById('spokes');
+    const toRad = d => d * Math.PI / 180;
+
+    // === 文字自動換行 + 自動縮放 ===
+    function layoutFor(label, radius = NODE_R){
+      const raw = (label || "");
+      const pureLen = raw.replace(/\s/g, "").length;
+
+      // 依長度粗估字級/每行字數/行距（可再微調）
+      let font = 26, perLine = 6, lineGap = 15;
+      if (pureLen <= 4){ font = 30; perLine = 4; lineGap = 16; }
+      else if (pureLen <= 6){ font = 28; perLine = 5; lineGap = 15; }
+      else if (pureLen <= 8){ font = 24; perLine = 6; lineGap = 14; }
+      else if (pureLen <= 10){ font = 22; perLine = 6; lineGap = 13; }
+      else if (pureLen <= 12){ font = 20; perLine = 7; lineGap = 12; }
+      else { font = 18; perLine = 7; lineGap = 12; }
+
+      // 有空白→以單字塞行；否則→按字數切
+      const lines = [];
+      if (/\s/.test(raw)){
+        const words = raw.split(/\s+/);
+        let cur = "";
+        for (const w of words){
+          const test = (cur ? cur + " " : "") + w;
+          if (test.length > perLine * 1.8){ lines.push(cur); cur = w; }
+          else { cur = test; }
+        }
+        if (cur) lines.push(cur);
+      } else {
+        for (let i=0; i<raw.length; i+=perLine){ lines.push(raw.slice(i, i+perLine)); }
+      }
+      return { lines: lines.slice(0,3), font, lineGap };
+    }
+
+    function render(items){
+      nodesG.innerHTML = '';
+      spokesG.innerHTML = '';
+
+      const n = items.length;
+      const step = 360 / n;
+      const offset = ROTATE_OFFSET_DEG;
+
+      for(let i=0;i<n;i++){
+        const deg = offset + i*step;
+        const rad = toRad(deg);
+        const x = Math.cos(rad) * RADIUS;
+        const y = Math.sin(rad) * RADIUS;
+
+        // 放射線
+        const x0 = Math.cos(rad) * SPOKE_FROM;
+        const y0 = Math.sin(rad) * SPOKE_FROM;
+        const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+        line.setAttribute("x1", x0); line.setAttribute("y1", y0);
+        line.setAttribute("x2", x);  line.setAttribute("y2", y);
+        line.setAttribute("class","spoke");
+        spokesG.appendChild(line);
+
+        // 節點 <a>
+        const a = document.createElementNS("http://www.w3.org/2000/svg","a");
+        a.setAttribute("href", items[i].href || "#");
+        if(OPEN_IN_NEW_TAB) a.setAttribute("target","_blank");
+        a.setAttribute("class","node");
+        a.setAttribute("aria-label", items[i].label || `項目 ${i+1}`);
+
+        // 群組
+        const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+        g.setAttribute("transform", `translate(${x},${y})`);
+
+        // 圓形
+        const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        c.setAttribute("r", 110); // 視覺上的節點半徑
+        if (items[i].color) c.setAttribute("fill", items[i].color); // 如果有指定顏色，則應用
+        g.appendChild(c);
+
+        // 文字（自動換行＋縮放，垂直置中）
+        const { lines, font, lineGap } = layoutFor(items[i].label, NODE_R);
+        const totalH = (lines.length - 1) * lineGap;
+        lines.forEach((txt, idx)=>{
+          const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+          t.setAttribute("x", 0);
+          t.setAttribute("y", -totalH/2 + idx*lineGap);
+          t.setAttribute("text-anchor","middle");
+          t.setAttribute("dominant-baseline","middle");
+          t.setAttribute("font-size", String(font));
+          t.textContent = txt;
+          g.appendChild(t);
+        });
+
+        // hint（如果有）
+        if(items[i].hint){
+          const hint = document.createElementNS("http://www.w3.org/2000/svg","text");
+          hint.setAttribute("x", 0);
+          hint.setAttribute("y", 110 - 16);
+          hint.setAttribute("text-anchor","middle");
+          hint.setAttribute("dominant-baseline","middle");
+          hint.setAttribute("class","hint");
+          hint.textContent = items[i].hint;
+          g.appendChild(hint);
+        }
+
+        a.appendChild(g);
+        nodesG.appendChild(a);
+      }
+    }
+
+    render(items);
+  </script>
+</body>
+</html>
