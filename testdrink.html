@@ -3,156 +3,208 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>飲料試喝表單</title>
+  <title>客戶資料填報表</title>
   <style>
-    :root {
-      --bg: #f3f4f6;
-      --card: #ffffff;
-      --ink: #1f2937;
-      --muted: #6b7280;
-      --accent: #2563eb;
-      --radius: 16px;
+    :root{
+      --bg:#fafafa; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --accent:#2563eb; --ring:#e5e7eb;
+      --radius:14px; --shadow:0 8px 20px rgba(0,0,0,.06)
     }
-    * {
-      box-sizing: border-box;
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans TC",Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
+    .wrap{max-width:1100px;margin:auto;padding:24px}
+    h1{margin:0 0 16px}
+    .card{background:var(--card);border:1px solid var(--ring);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+    .grid{display:grid;gap:16px}
+    @media(min-width:840px){ .grid-cols-2{grid-template-columns:1fr 1fr} .grid-cols-3{grid-template-columns:repeat(3,1fr)} }
+    label{font-weight:600;display:block;margin-bottom:6px}
+    input[type="text"], select, textarea, input[type="date"]{
+      width:100%;padding:10px 12px;border:1px solid var(--ring);border-radius:10px;background:#fff
     }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: system-ui, "Noto Sans TC", sans-serif;
-      line-height: 1.5;
-      padding: 20px;
+    textarea{min-height:90px;resize:vertical}
+    fieldset{border:1px dashed var(--ring);border-radius:12px;padding:14px}
+    legend{padding:0 8px;font-weight:700;color:var(--muted)}
+    .stack > label{font-weight:500;display:flex;gap:8px;align-items:center;margin:6px 0}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+    button{
+      cursor:pointer;border:1px solid var(--ring);background:var(--accent);color:#fff;padding:10px 16px;border-radius:10px;font-weight:700
     }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .row {
-      margin-bottom: 16px;
-    }
-    label {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--muted);
-    }
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #d1d5db;
-      border-radius: var(--radius);
-      font-size: 14px;
-    }
-    textarea {
-      resize: vertical;
-    }
-    .actions {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 20px;
-    }
-    .btn {
-      padding: 10px 16px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .btn:hover {
-      background: #1e40af;
-    }
+    button.secondary{background:#fff;color:var(--ink)}
+    .muted{color:var(--muted);font-size:.92rem}
+    pre{background:#0b1220;color:#e5e7eb;padding:12px;border-radius:10px;overflow:auto}
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>飲料試喝表單</h1>
-    <div class="row">
-      <label for="date">試喝日期</label>
-      <input id="date" type="date" required />
-    </div>
-    <div class="row">
-      <label for="name">試喝者姓名</label>
-      <input id="name" type="text" placeholder="王小明" required />
-    </div>
-    <div class="row">
-      <label for="drink">試喝飲品名稱</label>
-      <input id="drink" type="text" placeholder="請輸入飲品名稱" required />
-    </div>
-    <div class="row">
-      <label for="rating">試喝評分（1-5 分）</label>
-      <select id="rating" required>
-        <option value="" disabled selected>請選擇評分</option>
-        <option value="1">1 - 很差</option>
-        <option value="2">2 - 不滿意</option>
-        <option value="3">3 - 普通</option>
-        <option value="4">4 - 滿意</option>
-        <option value="5">5 - 非常滿意</option>
-      </select>
-    </div>
-    <div class="row">
-      <label for="comments">試喝意見</label>
-      <textarea id="comments" rows="4" placeholder="請輸入您的意見或建議"></textarea>
-    </div>
-    <div class="actions">
-      <button class="btn" id="saveBtn">儲存為 JSON</button>
-      <button class="btn" id="clearBtn">清空表單</button>
-    </div>
+  <div class="wrap">
+    <h1>客戶資料填報表</h1>
+    <p class="muted">填寫完可按「匯出 JSON」拷貝結果；或直接提交。</p>
+
+    <form id="customerForm" class="card grid" onsubmit="event.preventDefault(); exportJSON();">
+      <!-- 基本資料 -->
+      <div class="grid grid-cols-3">
+        <div>
+          <label for="name">姓名</label>
+          <input id="name" name="姓名" type="text" placeholder="請輸入姓名" required />
+        </div>
+        <div>
+          <label for="date">測試日期</label>
+          <input id="date" name="測試日期" type="date" />
+        </div>
+        <div>
+          <label for="region">客戶區域</label>
+          <select id="region" name="客戶區域" required>
+            <option value="" selected disabled>請選擇</option>
+            <option>台灣</option>
+            <option>東南亞</option>
+            <option>歐洲</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label for="source">取得資訊</label>
+        <textarea id="source" name="取得資訊" placeholder="如：展覽、介紹、官網表單、電話…"></textarea>
+      </div>
+
+      <!-- 經營模式（多選） + 客戶分類（單選） -->
+      <div class="grid grid-cols-2">
+        <fieldset>
+          <legend>經營模式（可複選）</legend>
+          <div class="stack">
+            <label><input type="checkbox" name="經營模式" value="早餐"> 早餐</label>
+            <label><input type="checkbox" name="經營模式" value="網咖"> 網咖</label>
+            <label><input type="checkbox" name="經營模式" value="外帶店"> 外帶店</label>
+            <label><input type="checkbox" name="經營模式" value="複合式"> 複合式</label>
+            <label><input type="checkbox" name="經營模式" value="連鎖店"> 連鎖店</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>客戶分類（擇一）</legend>
+          <div class="stack">
+            <label><input type="radio" name="客戶分類" value="已開店" required> 已開店</label>
+            <label><input type="radio" name="客戶分類" value="將開店"> 將開店</label>
+            <label><input type="radio" name="客戶分類" value="新客戶"> 新客戶</label>
+            <label><input type="radio" name="客戶分類" value="找物料"> 找物料</label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- 需求／意見 -->
+      <div class="grid grid-cols-2">
+        <div>
+          <label for="needs">客戶需求</label>
+          <textarea id="needs" name="客戶需求" placeholder="容量、價位、口味、交期、服務等"></textarea>
+        </div>
+        <div>
+          <label for="feedback">客戶意見</label>
+          <textarea id="feedback" name="客戶意見" placeholder="試飲回饋、調整建議、競品比較等"></textarea>
+        </div>
+      </div>
+
+      <!-- 產品偏好（多選清單） -->
+      <fieldset>
+        <legend>產品偏好（可複選）</legend>
+        <div class="grid grid-cols-3">
+          <fieldset>
+            <legend>茶類</legend>
+            <div class="stack">
+              <label><input type="checkbox" name="茶類" value="紅茶"> 紅茶</label>
+              <label><input type="checkbox" name="茶類" value="綠茶"> 綠茶</label>
+              <label><input type="checkbox" name="茶類" value="烏龍茶"> 烏龍茶</label>
+              <label><input type="checkbox" name="茶類" value="日本茶"> 日本茶</label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>果汁</legend>
+            <div class="stack">
+              <label><input type="checkbox" name="果汁" value="大宗"> 大宗</label>
+              <label><input type="checkbox" name="果汁" value="暢銷"> 暢銷</label>
+              <label><input type="checkbox" name="果汁" value="獨賣"> 獨賣</label>
+              <label><input type="checkbox" name="果汁" value="暖冬"> 暖冬</label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>果粉</legend>
+            <div class="stack">
+              <label><input type="checkbox" name="果粉" value="奶茶粉"> 奶茶粉</label>
+              <label><input type="checkbox" name="果粉" value="風味果粉"> 風味果粉</label>
+              <label><input type="checkbox" name="果粉" value="養生系列"> 養生系列</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="grid grid-cols-3" style="margin-top:12px">
+          <fieldset>
+            <legend>咖啡</legend>
+            <div class="stack">
+              <label><input type="checkbox" name="咖啡" value="咖啡粉"> 咖啡粉</label>
+              <label><input type="checkbox" name="咖啡" value="咖啡豆"> 咖啡豆</label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>配料</legend>
+            <div class="stack">
+              <label><input type="checkbox" name="配料" value="珍珠類"> 珍珠類</label>
+              <label><input type="checkbox" name="配料" value="其他類"> 其他類</label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>糖類</legend>
+            <div class="stack">
+              <label><input type="checkbox" name="糖類" value="大宗"> 大宗</label>
+              <label><input type="checkbox" name="糖類" value="獨賣"> 獨賣</label>
+              <label><input type="checkbox" name="糖類" value="風味糖漿"> 風味糖漿</label>
+            </div>
+          </fieldset>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="submit">匯出 JSON</button>
+        <button class="secondary" type="reset">清除</button>
+      </div>
+
+      <div>
+        <label>匯出結果</label>
+        <pre id="out" aria-live="polite">{}</pre>
+      </div>
+    </form>
   </div>
 
   <script>
-    // 收集表單資料
-    function collectFormData() {
-      return {
-        date: document.getElementById("date").value,
-        name: document.getElementById("name").value,
-        drink: document.getElementById("drink").value,
-        rating: document.getElementById("rating").value,
-        comments: document.getElementById("comments").value,
-      };
+    function exportJSON(){
+      const form = document.getElementById('customerForm');
+      const data = {};
+
+      // 單值欄位
+      data["姓名"] = form.elements["姓名"].value.trim();
+      data["測試日期"] = form.elements["測試日期"].value;
+      data["客戶區域"] = form.elements["客戶區域"].value;
+      data["取得資訊"] = form.elements["取得資訊"].value.trim();
+      data["客戶需求"] = form.elements["客戶需求"].value.trim();
+      data["客戶意見"] = form.elements["客戶意見"].value.trim();
+
+      // 客戶分類（radio）
+      const cat = form.querySelector('input[name="客戶分類"]:checked');
+      data["客戶分類"] = cat ? cat.value : "";
+
+      // 多選群組
+      const collect = (name) => Array.from(form.querySelectorAll(`input[name="${name}"]:checked`)).map(i=>i.value);
+      data["經營模式"] = collect("經營模式");
+      data["茶類"] = collect("茶類");
+      data["果汁"] = collect("果汁");
+      data["果粉"] = collect("果粉");
+      data["咖啡"] = collect("咖啡");
+      data["配料"] = collect("配料");
+      data["糖類"] = collect("糖類");
+
+      document.getElementById('out').textContent = JSON.stringify(data, null, 2);
+      navigator.clipboard?.writeText(JSON.stringify(data, null, 2)).catch(()=>{});
     }
-
-    // 下載 JSON 檔案
-    function downloadJSON(data, filename = "drink-tasting.json") {
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    // 綁定按鈕事件
-    document.getElementById("saveBtn").addEventListener("click", () => {
-      const data = collectFormData();
-      if (!data.date || !data.name || !data.drink || !data.rating) {
-        alert("請完整填寫表單！");
-        return;
-      }
-      downloadJSON(data);
-    });
-
-    document.getElementById("clearBtn").addEventListener("click", () => {
-      document.getElementById("date").value = "";
-      document.getElementById("name").value = "";
-      document.getElementById("drink").value = "";
-      document.getElementById("rating").value = "";
-      document.getElementById("comments").value = "";
-    });
   </script>
 </body>
 </html>
