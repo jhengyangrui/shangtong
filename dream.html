@@ -63,6 +63,28 @@
       align-items: center;
       min-width: 340px;
       z-index: 1;
+
+      /* 新增滾動條 */
+      max-height: 80vh; /* 限制容器高度 */
+      overflow-y: auto; /* 垂直滾動條 */
+    }
+
+    /* 自訂滾動條樣式（可選） */
+    .glass::-webkit-scrollbar {
+      width: 8px; /* 滾動條寬度 */
+    }
+
+    .glass::-webkit-scrollbar-thumb {
+      background: rgba(31, 41, 55, 0.5); /* 滾動條顏色 */
+      border-radius: 4px;
+    }
+
+    .glass::-webkit-scrollbar-thumb:hover {
+      background: rgba(31, 41, 55, 0.8); /* 滾動條 hover 顏色 */
+    }
+
+    .glass::-webkit-scrollbar-track {
+      background: rgba(229, 231, 235, 0.5); /* 滾動條軌道顏色 */
     }
     h1 {
       margin-bottom:30px;
