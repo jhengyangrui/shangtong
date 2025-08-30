@@ -41,15 +41,15 @@
     <form id="customerForm" class="card grid" onsubmit="event.preventDefault(); exportJSON();">
       <!-- 基本資料 -->
       <div class="grid grid-cols-3">
-        <div>
+        <!-- <div>
           <label for="name">姓名</label>
           <input id="name" name="姓名" type="text" placeholder="請輸入姓名" required />
-        </div>
+        </div> -->
         <div>
           <label for="date">測試日期</label>
           <input id="date" name="測試日期" type="date" />
         </div>
-        <div>
+        <!-- <div>
           <label for="region">客戶區域</label>
           <select id="region" name="客戶區域" required>
             <option value="" selected disabled>請選擇</option>
@@ -57,17 +57,17 @@
             <option>東南亞</option>
             <option>歐洲</option>
           </select>
-        </div>
+        </div> -->
       </div>
 
-      <div>
+      <!-- <div>
         <label for="source">取得資訊</label>
         <textarea id="source" name="取得資訊" placeholder="如：展覽、介紹、官網表單、電話…"></textarea>
-      </div>
+      </div> -->
 
       <!-- 經營模式（多選） + 客戶分類（單選） -->
       <div class="grid grid-cols-2">
-        <fieldset>
+        <!-- <fieldset>
           <legend>經營模式（可複選）</legend>
           <div class="stack">
             <label><input type="checkbox" name="經營模式" value="早餐"> 早餐</label>
@@ -76,9 +76,9 @@
             <label><input type="checkbox" name="經營模式" value="複合式"> 複合式</label>
             <label><input type="checkbox" name="經營模式" value="連鎖店"> 連鎖店</label>
           </div>
-        </fieldset>
+        </fieldset> -->
 
-        <fieldset>
+        <!-- <fieldset>
           <legend>客戶分類（擇一）</legend>
           <div class="stack">
             <label><input type="radio" name="客戶分類" value="已開店" required> 已開店</label>
@@ -86,11 +86,11 @@
             <label><input type="radio" name="客戶分類" value="新客戶"> 新客戶</label>
             <label><input type="radio" name="客戶分類" value="找物料"> 找物料</label>
           </div>
-        </fieldset>
+        </fieldset> -->
       </div>
 
       <!-- 需求／意見 -->
-      <div class="grid grid-cols-2">
+      <!-- <div class="grid grid-cols-2">
         <div>
           <label for="needs">客戶需求</label>
           <textarea id="needs" name="客戶需求" placeholder="容量、價位、口味、交期、服務等"></textarea>
@@ -99,7 +99,7 @@
           <label for="feedback">客戶意見</label>
           <textarea id="feedback" name="客戶意見" placeholder="試飲回饋、調整建議、競品比較等"></textarea>
         </div>
-      </div>
+      </div> -->
 
       <!-- 產品偏好（多選清單） -->
       <fieldset>
